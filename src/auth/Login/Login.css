@@ -1,0 +1,16 @@
+.login-form {
+    max-width: 400px; /* Ajusta el ancho máximo del formulario según sea necesario */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .login-form label {
+    font-weight: bold;
+  }
+  
+  .login-form .form-control {
+    margin-bottom: 15px;
+  }
+  
