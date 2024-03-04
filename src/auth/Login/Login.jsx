@@ -5,16 +5,26 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import {Link, useNavigate} from 'react-router-dom'
-import './Login.css'; // Importa tu archivo CSS personalizado
+import './Login.css'; // Importa tu archivo CSS personalizado}
+import { io } from 'socket.io-client';
+import { useContext } from '../hooks/useContext';
+
+
+const socket = io('http://localhost:8000');
+
+socket.on('connect', () =>{
+  console.log('conectado')
+
+})
+
 
 export default function Login() {
-
+   
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         correo: '',
         password: '',
-        rol: 'TECNICO',
     });
     
 
@@ -28,18 +38,23 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
       e.preventDefault();
-
+      //osea que estos datos van para el hook
       try {
       
           const response = await fetch('http://localhost:8000/api/inventario/login/tecnico', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
+                  'metasploit': ''
               },
               body: JSON.stringify(formData),
           });
-
           if (response.ok) {
+            
+            const data = await response.json();
+            const token = data.token; // Suponiendo que el token está en la respuesta JSON
+            console.log('Token recibido:', token); // Imprimir el token en la consola
+            localStorage.setItem('token', token);
               alert('¡Registro exitoso!');
               navigate('/Home'); // Redirigir a la página de inicio de sesión
           } else {
