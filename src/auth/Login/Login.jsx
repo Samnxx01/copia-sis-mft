@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col';
 import {Link, useNavigate} from 'react-router-dom'
 import './Login.css'; // Importa tu archivo CSS personalizado}
 import { io } from 'socket.io-client';
-import { useContext } from '../hooks/useContext';
+//import { useContext } from '../hooks/useContext';
 
 
 const socket = io('http://localhost:8000');
@@ -52,10 +52,19 @@ export default function Login() {
           if (response.ok) {
             
             const data = await response.json();
+            const nickname = data.verificar.nickname
+            const id = data.verificar.iud
+            const rol = data.verificar.rol
             const token = data.token; // Suponiendo que el token está en la respuesta JSON
-            console.log('Token recibido:', token); // Imprimir el token en la consola
-            localStorage.setItem('token', token);
-              alert('¡Registro exitoso!');
+            console.log('Token recibido:', token);
+            console.log('Usuario:', nickname); 
+            console.log('Rol:', rol); 
+            console.log('ID reciibido:', id);  // Imprimir el token en la consola
+            localStorage.setItem('token', token); 
+            localStorage.setItem('nickname', nickname);  
+            localStorage.setItem('id', id); 
+            localStorage.setItem('rol', rol);     
+              alert('¡Inicio de sesion exitoso');
               navigate('/Home'); // Redirigir a la página de inicio de sesión
           } else {
               console.error('datos incorrectos');

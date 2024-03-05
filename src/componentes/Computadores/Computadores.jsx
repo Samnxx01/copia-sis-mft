@@ -9,52 +9,51 @@ export default function Computadores() {
         <Form>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>sede</Form.Label>
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control type="text" placeholder="Sedes" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>ubicacion</Form.Label>
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control type="text" placeholder="Ubicacion" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>area</Form.Label>
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control type="text" placeholder="Area" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>marca</Form.Label>
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control type="text" placeholder="Marca" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>nombre_equipo</Form.Label>
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control type="text" placeholder="Nombre equipo" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>placa</Form.Label>
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control type="text" placeholder="Placa" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>sistema_operativo</Form.Label>
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control type="text" placeholder="El sistema operativo es requerido" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>disco duro</Form.Label>
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control type="text" placeholder="El disco duro es requerido" />
       </Form.Group>
-
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>memoria ram</Form.Label>
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control type="text" placeholder="La memoria Ram es requerida" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>serial</Form.Label>
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control type="text" placeholder="La serial es requerida"/>
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>mac</Form.Label>
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control type="text" placeholder="La mac" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>ip</Form.Label>
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control type="text" placeholder="La ip es requerida" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>usuario</Form.Label>
