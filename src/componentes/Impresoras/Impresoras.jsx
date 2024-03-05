@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Narvbar from '../Narvbar/Narvbar';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { Navigate } from 'react-router-dom';
+import userContext from '../../auth/hooks/UseContext';
 
 export default function Impresoras() {
+
+  const {user} = useContext(userContext)
 
   const [formData, setFormData] = useState({
     sedes: '',
@@ -30,15 +33,21 @@ export default function Impresoras() {
     
   const [impresoras, setImpresoras] = useState([]);
   const [show, setShow] = useState(false);
-  const [showEliminar, setEliminar] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-
+  //boton de eliminar
+  const [showEliminar, setEliminar] = useState(false);
   const handleCerrar = () => setEliminar(false);
   const handleShowEli = () => setEliminar(true);
-  
+
+  const [idEliminar, setIdEliminar] = useState('');
+  //me gusta verlo bnito
+  const handleDeleteImpresora = (id) =>{
+    setEliminar(true);
+    setIdEliminar(id)
+  }
 
 
 
@@ -67,27 +76,24 @@ export default function Impresoras() {
         console.error('Error en la solicitud:', error);
     }
 };
-const handleEliminarClick = async () => {
+const handleEliminarClick = async (id) => {
+  console.log(id)
   try {
-    // Obtener el ID de la impresora
-    const impresoraId = impresoras._id;
 
-    // Enviar la solicitud DELETE a la API
-    const response = await fetch(`http://localhost:8000/api/inventario/eliminarImpresoras/${impresoraId}`, {
+    // Enviar la solicitud DELETE a la API sisa
+    const response = await fetch(`http://localhost:8000/api/inventario/eliminarImpresoras/${id}`, {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`, // Reemplazar "token" con el token de seguridad real
-      },
-    });
+    }); 
+    
+    //espere le muestro por postman
+    
 
     // Manejar la respuesta
     if (response.status === 200) {
       // Eliminación exitosa
-      onEliminarImpresora(impresoraId); // Actualizar la interfaz de usuario
       alert(`Impresora "${impresoras.serial}" eliminada con éxito.`);
       closeModal(); // Cerrar el modal de eliminación
-    } else {
+    } else { 
       // Error al eliminar
       const data = await response.json();
       const mensajeError = data.msg || 'Error al eliminar la impresora.';
@@ -134,6 +140,8 @@ const handleEliminarClick = async () => {
      <Button variant="primary" onClick={handleShow}>
         Aqui se registra la impresora
       </Button>
+
+      
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -262,7 +270,9 @@ const handleEliminarClick = async () => {
               <td>{regis.marca}</td>
               <td>{regis.contador}</td>
               <td>{regis.fecha}</td>
-              <Button variant="danger" onClick={handleShowEli}>
+              <Button variant="danger" onClick={()=>{
+                handleDeleteImpresora(regis._id)
+              }}>
                 Eliminar
               </Button> 
             </tr>
@@ -270,16 +280,18 @@ const handleEliminarClick = async () => {
         </tbody>
         <Modal show={showEliminar} onHide={handleCerrar}>
                 <Modal.Header closeButton>
-                  <Modal.Title>Quiere eliminar imrpesora?</Modal.Title>
+                  <Modal.Title>Quiere eliminar impresora?</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>Estas seguro de eliminar</Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleCerrar}>
                     Close
                   </Button>
-                  <Button variant="danger" onClick={handleEliminarClick}>
+                  <Button variant="danger" onClick={()=>{
+                    handleEliminarClick(idEliminar) 
+                  }}>
                     Eliminar
-                  </Button>
+                  </Button> 
                 </Modal.Footer>
               </Modal>
       </Table>

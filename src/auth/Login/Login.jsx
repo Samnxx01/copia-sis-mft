@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
@@ -7,20 +7,18 @@ import Col from 'react-bootstrap/Col';
 import {Link, useNavigate} from 'react-router-dom'
 import './Login.css'; // Importa tu archivo CSS personalizado}
 import { io } from 'socket.io-client';
-//import { useContext } from '../hooks/useContext';
+import userContext from '../hooks/UseContext';
 
 
-const socket = io('http://localhost:8000');
-
-socket.on('connect', () =>{
-  console.log('conectado')
-
-})
-
+//nopi , usecontext
 
 export default function Login() {
+
+    const {addUser} = useContext(userContext)
+    
    
     const navigate = useNavigate();
+   
 
     const [formData, setFormData] = useState({
         correo: '',
@@ -50,20 +48,10 @@ export default function Login() {
               body: JSON.stringify(formData),
           });
           if (response.ok) {
+
             
             const data = await response.json();
-            const nickname = data.verificar.nickname
-            const id = data.verificar.iud
-            const rol = data.verificar.rol
-            const token = data.token; // Suponiendo que el token está en la respuesta JSON
-            console.log('Token recibido:', token);
-            console.log('Usuario:', nickname); 
-            console.log('Rol:', rol); 
-            console.log('ID reciibido:', id);  // Imprimir el token en la consola
-            localStorage.setItem('token', token); 
-            localStorage.setItem('nickname', nickname);  
-            localStorage.setItem('id', id); 
-            localStorage.setItem('rol', rol);     
+              addUser(data)
               alert('¡Inicio de sesion exitoso');
               navigate('/Home'); // Redirigir a la página de inicio de sesión
           } else {
