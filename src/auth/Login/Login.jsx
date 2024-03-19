@@ -53,7 +53,7 @@ export default function Login() {
             const data = await response.json();
               addUser(data)
               alert('¡Inicio de sesion exitoso');
-              navigate('/Home'); // Redirigir a la página de inicio de sesión
+              navigate('/computadores'); // Redirigir a la página de inicio de sesión
           } else {
               console.error('datos incorrectos');
               alert('Error en el registro');

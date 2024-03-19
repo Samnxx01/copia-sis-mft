@@ -7,7 +7,6 @@ export default function LayoutRoutes() {
 
 
     const {user} = useContext(userContext)
-    const determinar = user ? <privateRoute/> : <PublicRoutes/>
 
   return (
     <React.Fragment>

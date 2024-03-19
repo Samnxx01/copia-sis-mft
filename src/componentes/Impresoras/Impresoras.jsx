@@ -43,7 +43,7 @@ export default function Impresoras() {
   const handleShowEli = () => setEliminar(true);
 
   const [idEliminar, setIdEliminar] = useState('');
-  //me gusta verlo bnito
+
   const handleDeleteImpresora = (id) =>{
     setEliminar(true);
     setIdEliminar(id)
@@ -53,6 +53,8 @@ export default function Impresoras() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    const id = e.target.id.value;
 
     try {
     
@@ -60,14 +62,17 @@ export default function Impresoras() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'metasploit': ''
+                'codificado': ''
             },
-            body: JSON.stringify(formData),
-        });
+            body: JSON.stringify({
+              ...formData,
+              id,
+            }),
+          });
 
         if (response.ok) {
             alert('¡Registro exitoso!');
-            navigate('/Login'); // Redirigir a la página de inicio de sesión
+            Navigate('/impresoras'); // Redirigir a la página de inicio de sesión
         } else {
             console.error('datos incorrectos');
             alert('Error en el registro');
@@ -77,7 +82,10 @@ export default function Impresoras() {
     }
 };
 const handleEliminarClick = async (id) => {
-  console.log(id)
+  
+  const impresora = impresoras.find(impresora => impresora._id === id);
+  const numeroSerie = impresora.serial;
+
   try {
 
     // Enviar la solicitud DELETE a la API sisa
@@ -91,8 +99,7 @@ const handleEliminarClick = async (id) => {
     // Manejar la respuesta
     if (response.status === 200) {
       // Eliminación exitosa
-      alert(`Impresora "${impresoras.serial}" eliminada con éxito.`);
-      closeModal(); // Cerrar el modal de eliminación
+      alert(`Impresora "${numeroSerie}" eliminada con éxito.`); 
     } else { 
       // Error al eliminar
       const data = await response.json();
@@ -279,7 +286,7 @@ const handleEliminarClick = async (id) => {
           ))}
         </tbody>
         <Modal show={showEliminar} onHide={handleCerrar}>
-                <Modal.Header closeButton>
+                <Modal.Header >
                   <Modal.Title>Quiere eliminar impresora?</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>Estas seguro de eliminar</Modal.Body>
