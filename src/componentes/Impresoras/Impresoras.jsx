@@ -59,6 +59,22 @@ export default function Impresoras() {
 
 
 
+  //boton de modificar
+  const [showModi, setModi] = useState(false);
+  const [idModi, setIdModi] = useState('');
+ 
+
+  const handleModificarImpresora = (id) => {
+    setModi(true);
+    setIdModi(id)
+
+  }
+  
+
+  const handleCloseModi = () => setModi(false);
+  const handleShowModi = () => setModi(true);
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -118,6 +134,35 @@ export default function Impresoras() {
       // Error inesperado
       console.error('Error al eliminar la impresora:', error.message);
       alert('Ha ocurrido un error inesperado. Inténtalo de nuevo más tarde.');
+    }
+  };
+
+  //por que no me envia el id que quiero modificar? 
+  //oe pille que hago la validaciones desde mi backend con helpers y no me hace la validacion
+  //como hago para que se envie el id?
+
+  // por que el postman si sirve? antocs?
+
+  //r y que mas? servis
+  const handleSubmitModificar = async (e, id) => {
+    e.preventDefault();
+    try {
+
+      console.log(formData)
+      const response = await fetch(`http://localhost:8000/api/inventario/modificarImpresoras/${id}`, {
+        method: 'PUT',
+        body: [formData]
+      });
+
+      if (response.ok) {
+        alert('¡Modificacion exitoso!');
+        Navigate('/impresoras'); // Redirigir a la página de inicio de sesión
+      } else {
+        console.error('datos incorrectos');
+        alert('Error en el registro');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
     }
   };
 
@@ -196,10 +241,10 @@ export default function Impresoras() {
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Ingrese el serial</Form.Label>
               <Form.Control
-               type="text"
-               placeholder="serial"
-               value={serial}
-               onChange={(e) =>setSerial(e.target.value)}/>
+                type="text"
+                placeholder="serial"
+                value={serial}
+                onChange={(e) => setSerial(e.target.value)} />
               <Button variant="success" onClick={() => obtenerImpresoras('serial', serial)}>Buscar</Button>
             </Form.Group>
           </Form>
@@ -345,9 +390,115 @@ export default function Impresoras() {
               }}>
                 Eliminar
               </Button>
+
+              <Button variant="info" onClick={() => {
+                handleModificarImpresora(regis._id)
+              }}>
+                Modificar
+              </Button>
             </tr>
+
           ))}
         </tbody>
+
+        <Modal show={showModi} onHide={handleCloseModi}>
+          <Modal.Header closeButton>
+            <Modal.Title>Quieres modificar?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <br />
+            <th>sede</th>
+            <Form.Control type="text" placeholder="sede"
+              id="sedes"
+              name="sedes"
+              autoComplete="sedes"
+              value={formData.sedes}
+              onChange={handleInputChange}
+              required />
+
+            <br />
+            <th>piso</th>
+            <Form.Control type="text" placeholder="Piso"
+              id="pisos"
+              name="pisos"
+              autoComplete="pisos"
+              value={formData.pisos}
+              onChange={handleInputChange}
+              required />
+            <br />
+            <th>ip</th>
+            <Form.Control type="text" placeholder="ip obligatorio"
+              id="ip"
+              name="ip"
+              autoComplete="ip"
+              value={formData.ip}
+              onChange={handleInputChange}
+              required />
+            <br />
+            <th>serial</th>
+            <Form.Control type="text" placeholder="serial"
+              id="serial"
+              name="serial"
+              autoComplete="email"
+              value={formData.serial}
+              onChange={handleInputChange}
+              required />
+            <br />
+            <th>mac</th>
+            <Form.Control type="text" placeholder="Mac"
+              id="mac"
+              name="mac"
+              autoComplete="mac"
+              value={formData.mac}
+              onChange={handleInputChange}
+              required />
+            <br />
+            <th>ubicacion</th>
+            <Form.Control type="text" placeholder="ubicacion"
+              id="ubicacion"
+              name="ubicacion"
+              autoComplete="ubicacion"
+              value={formData.ubicacion}
+              onChange={handleInputChange}
+              required />
+            <br />
+            <th>marca</th>
+            <Form.Control type="text" placeholder="Marca"
+              id="marca"
+              name="marca"
+              autoComplete="marca"
+              value={formData.marca}
+              onChange={handleInputChange}
+              required />
+            <br />
+            <th>contador</th>
+            <Form.Control type="text" placeholder="Contador"
+              id="contador"
+              name="contador"
+              autoComplete="email"
+              value={formData.contador}
+              onChange={handleInputChange}
+              required />
+            <br />
+            <th>fecha</th>
+            <Form.Control type="text" placeholder="Fecha"
+              id="fecha"
+              name="fecha"
+              autoComplete="fecha"
+              value={formData.fecha}
+              onChange={handleInputChange}
+              required />
+            <br />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseModi}>
+              Cerrar
+            </Button>
+            <Button variant="success" onClick={(e)=>handleSubmitModificar(e, idModi)}>
+              Modificado
+            </Button>
+          </Modal.Footer>
+        </Modal>
         <Modal show={showEliminar} onHide={handleCerrar}>
           <Modal.Header >
             <Modal.Title>Quiere eliminar impresora?</Modal.Title>
@@ -364,6 +515,7 @@ export default function Impresoras() {
             </Button>
           </Modal.Footer>
         </Modal>
+
       </Table>
     </>
   );

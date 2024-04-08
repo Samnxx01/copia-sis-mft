@@ -6,18 +6,18 @@ export default function Computadores() {
   return (
     <>
     <Narvbar/>
-        <Form>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+        <Form className="mb-3 col-2">
+      <Form.Group className="mb-3 text-center" controlId="exampleForm.ControlInput1">
         <Form.Label>sede</Form.Label>
-        <Form.Control type="text" placeholder="Sedes" />
+        <Form.Control className="mb-3 text-center" type="text" placeholder="Sedes" />
       </Form.Group>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Label>ubicacion</Form.Label>
-        <Form.Control type="text" placeholder="Ubicacion" />
+      <Form.Group className="mb-3 text-center" controlId="exampleForm.ControlInput1">
+        <Form.Label >ubicacion</Form.Label>
+        <Form.Control className="mb-3 text-center" type="text" placeholder="Ubicacion" />
       </Form.Group>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+      <Form.Group className="mb-3 text-center" controlId="exampleForm.ControlInput1">
         <Form.Label>area</Form.Label>
-        <Form.Control type="text" placeholder="Area" />
+        <Form.Control className="mb-3 text-center" type="text" placeholder="Area" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>marca</Form.Label>

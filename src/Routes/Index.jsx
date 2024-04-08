@@ -10,8 +10,7 @@ import LayoutRoutes from './LayoutRoutes'
 
 //pero que dato ?
 export default function Index() {
-  <Narvbar />
-  console.log('hola')
+ 
   return (
     <UserProvider>
       <LayoutRoutes/>
