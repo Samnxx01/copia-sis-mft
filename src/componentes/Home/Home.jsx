@@ -77,7 +77,7 @@ export default function Home() {
             <tr key={index}>
               <td>{regis.fecha}</td>
               <td>{regis.sede}</td>
-              <td>{regis.ubicación}</td>
+              <td>{regis.ubicacion}</td>
               <td>{regis.nombre_equipo}</td>
               <td>{regis.sistema_operativo}</td>
               <td>{regis.placa}</td>

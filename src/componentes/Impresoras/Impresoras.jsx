@@ -137,13 +137,7 @@ export default function Impresoras() {
     }
   };
 
-  //por que no me envia el id que quiero modificar? 
-  //oe pille que hago la validaciones desde mi backend con helpers y no me hace la validacion
-  //como hago para que se envie el id?
-
-  // por que el postman si sirve? antocs?
-
-  //r y que mas? servis
+ 
   const handleSubmitModificar = async (e, id) => {
     e.preventDefault();
     try {
@@ -272,7 +266,6 @@ export default function Impresoras() {
             value={formData.sedes}
             onChange={handleInputChange}
             required />
-
           <br />
           <th>piso</th>
           <Form.Control type="text" placeholder="Piso"
