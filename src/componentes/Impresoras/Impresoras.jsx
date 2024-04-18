@@ -75,6 +75,8 @@ export default function Impresoras() {
   const handleShowModi = () => setModi(true);
 
 
+  //Logica de post de impresoras.
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -105,6 +107,8 @@ export default function Impresoras() {
       console.error('Error en la solicitud:', error);
     }
   };
+
+  //Logica para eliminar por ID Y SERIAL de las impresoras
   const handleEliminarClick = async (id) => {
 
     const impresora = impresoras.find(impresora => impresora._id === id);
@@ -137,7 +141,7 @@ export default function Impresoras() {
     }
   };
 
- 
+ //Logica para modificar impresora
   const handleSubmitModificar = async (e, id) => {
     e.preventDefault();
     try {
@@ -160,7 +164,7 @@ export default function Impresoras() {
     }
   };
 
-
+  //Logica para listar impresoras 
   useEffect(() => {
     const fetchImpresoras = async () => {
       try {
@@ -222,6 +226,7 @@ export default function Impresoras() {
   return (
     <>
       <Narvbar />
+
       <Button variant="success" onClick={handleShowID}>
         Listar por SERIAL
       </Button>
@@ -493,10 +498,10 @@ export default function Impresoras() {
           </Modal.Footer>
         </Modal>
         <Modal show={showEliminar} onHide={handleCerrar}>
-          <Modal.Header >
-            <Modal.Title>Quiere eliminar impresora?</Modal.Title>
+          <Modal.Header>
+            <Modal.Title>¿Quiere eliminar impresora?</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Estas seguro de eliminar</Modal.Body>
+          <Modal.Body>¿Estas seguro de eliminar?</Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCerrar}>
               Close
