@@ -294,13 +294,11 @@ export default function Computadores() {
             </Form.Group>
             <Form.Group className="mb-3">
               <th>Dominio</th>
-              <Form.Control type="text" placeholder="Dominio"
-                id="dominio"
-                name="dominio"
-                autoComplete="dominio"
-                value={formData.dominio}
-                onChange={handleInputChange}
-                required />
+              <Form.Select aria-label="Dominio" name="dominio" value={formData.dominio} onChange={handleInputChange}>
+                <option value="">Seleccione el dominio</option>
+                <option value="SI">Si</option>
+                <option value="NO">No</option>
+              </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
               <th>Observaciones</th>

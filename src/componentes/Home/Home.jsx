@@ -17,6 +17,16 @@ export default function Home() {
     console.log('conectado')
 
   })
+
+
+  const [idEliminar, setIdEliminar] = useState('');
+
+  const handleDeleteImpresora = (id) => {
+    setEliminar(true);
+    setIdEliminar(id)
+  }
+
+  
   useEffect(() => {
     const fetchImpresoras = async () => {
       try {
@@ -43,6 +53,9 @@ export default function Home() {
 
     fetchImpresoras();
   }, []);
+
+
+  
   return (
     <>
     <Narvbar/>
