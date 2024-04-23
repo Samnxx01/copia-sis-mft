@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import Impresorass from '../Impresoras/Impresoras'
 import Login from '../../auth/Login/Login'
 import Narvbar from '../Narvbar/Narvbar'
@@ -21,32 +21,58 @@ export default function Home() {
   })
   const [showEliminar, setShowEliminar] = useState(false);
 
+  /*const [SeleccionarModificar, setModificar] = useState({
+    fecha: '',
+    sede: '',
+    ubicacion: '',
+    area: '',
+    marca: '',
+    nombre_equipo: '',
+    sistema_operativo: '',
+    placa: '',
+    disco_duro: '',
+    memoria_ram: '',
+    serial: '',
+    mac: '',
+    ip: '',
+    usuario: '',
+    clave: '',
+    nombre_asignado: '',
+    cedula: '',
+    dominio: '',
+    fecha_mantenimiento: '',
+    tecnico: '',
+    observaciones: '',
+
+  })*/
+
   const handleClose = () => setShowEliminar(false);
   const handleShow = () => setShowEliminar(true);
 
   const [idEliminar, setIdEliminar] = useState('');
 
-  const handleDeleteImpresora = (id) => {
+  const handleDeleteComputador = (id) => {
     setShowEliminar(true);
     setIdEliminar(id)
   }
 
   const handleEliminarClick = async (id) => {
 
-    const computer = computadoress.find(computadoress => computadoress._id === id);
+    const computer = computadoress.find(computer => computer._id === id);
     const numeroSerie = computer.serial;
+    console.log(computer)
 
     try {
 
       // Enviar la solicitud DELETE a la API sisa
-      const response = await fetch(`http://localhost:8000/api/inventario/eliminarImpresoras/${id}`, {
+      const response = await fetch(`http://localhost:8000/api/inventario/eliminarComputadores/${id}`, {
         method: 'DELETE',
       });
 
       // Manejar la respuesta
       if (response.status === 200) {
         // Eliminación exitosa
-        alert(`Impresora "${numeroSerie}" eliminada con éxito.`);
+        alert(`Computadores "${numeroSerie}" eliminada con éxito.`);
       } else {
         // Error al eliminar
         const data = await response.json();
@@ -143,15 +169,9 @@ export default function Home() {
               <td>{regis.dominio}</td>
               <td>{regis.observaciones}</td>
               <Button variant="danger" onClick={() => {
-                handleDeleteImpresora(regis._id)
+                handleDeleteComputador(regis._id)
               }}>
                 Eliminar
-              </Button>
-
-              <Button variant="info" onClick={() => {
-                handleModificarImpresora(regis._id)
-              }}>
-                Modificar
               </Button>
             </tr>
           ))}
@@ -168,7 +188,7 @@ export default function Home() {
             <Button variant="primary" onClick={()=>{
               handleEliminarClick(idEliminar)
             }}>
-              Save Changes
+             Eliminar
             </Button>
           </Modal.Footer>
         </Modal>

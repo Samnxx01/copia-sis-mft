@@ -23,6 +23,19 @@ export default function Impresoras() {
     contador: '',
     fecha: ''
   });
+ /* const [formDataEdi, setFormDataEdi] = useState({
+    sedes: impresoras.sedes,
+    pisos: impresoras.pisos,
+    ip: impresoras.ip,
+    serial: impresoras.serial,
+    ubicacion: impresoras.ubicacion,
+    mac: impresoras.mac,
+    marca: impresoras.marca,
+    contador: impresoras.contador,
+    fecha: impresoras.fecha
+  });
+*/
+  
   const [serial, setSerial] = useState('');
 
   const handleInputChange = (e) => {
@@ -145,11 +158,10 @@ export default function Impresoras() {
   const handleSubmitModificar = async (e, id) => {
     e.preventDefault();
     try {
-
-      console.log(formData)
+      const formDataJSON = JSON.stringify(formData); // Convert formData to JSON
       const response = await fetch(`http://localhost:8000/api/inventario/modificarImpresoras/${id}`, {
         method: 'PUT',
-        body: [formData]
+        body: formDataJSON,
       });
 
       if (response.ok) {
@@ -165,32 +177,32 @@ export default function Impresoras() {
   };
 
   //Logica para listar impresoras 
-  useEffect(() => {
-    const fetchImpresoras = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/api/inventario/listarimpresoras', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+      useEffect(() => {
+        const fetchImpresoras = async () => {
+          try {
+            const response = await fetch('http://localhost:8000/api/inventario/listarimpresoras', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
 
-        const data = await response.json();
+            const data = await response.json();
 
-        // Ensure data has the expected structure and property
-        if (data && data.registrosImpreso) {
-          setImpresoras(data.registrosImpreso);
-        } else {
-          console.error('la api no responde.');
-          // Handle the case where the API data is missing or has an unexpected structure
-        }
-      } catch (error) {
-        console.error('Error fetching impresoras:', error);
-      }
-    };
+            // Ensure data has the expected structure and property
+            if (data && data.registrosImpreso) {
+              setImpresoras(data.registrosImpreso);
+            } else {
+              console.error('la api no responde.');
+              // Handle the case where the API data is missing or has an unexpected structure
+            }
+          } catch (error) {
+            console.error('Error fetching impresoras:', error);
+          }
+        };
 
-    fetchImpresoras();
-  }, []);
+        fetchImpresoras();
+      }, []);
 
   //api de buscar por id-serial
   const obtenerImpresoras = async (tipoBusqueda, valorBusqueda) => {
