@@ -6,6 +6,7 @@ import { io } from 'socket.io-client'
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 
 //import Reportes from'../Reportes-tecnicos/Reportes-compu'
 
@@ -14,6 +15,12 @@ export default function Home() {
   const socket = io('http://localhost:8000');
 
   const [computadoress, setComputadores] = useState([]);
+  const [serial, setSerial] = useState('');
+  const [ip, setIp] = useState('');
+  const handleCloseID = () => setShowID(false);
+  const handleShowID = () => setShowID(true);
+  const [showID, setShowID] = useState(false);
+
 
   socket.on('connect', () => {
     console.log('conectado')
@@ -85,7 +92,64 @@ export default function Home() {
       alert('Ha ocurrido un error inesperado. Inténtalo de nuevo más tarde.');
     }
   };
+  const obtenerComputadores = async (tipoBusqueda, valorBusqueda) => {
+    try {
+      let url;
+      if (tipoBusqueda === 'serial') {
+        url = `http://localhost:8000/api/inventario/computador/listarID/${valorBusqueda}`;
+      } else {
+        console.error('Tipo de búsqueda inválido:', tipoBusqueda);
+        return; // Manejar el tipo de búsqueda inválido
+      }
 
+      const respuesta = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const datos = await respuesta.json();
+
+      if (datos && datos.verificarPro) {
+        setComputadores([datos.verificarPro]); // Suponiendo un único resultado
+      } else {
+        console.error('API no responde o registro no encontrado.');
+        setComputadores([]); // Limpiar datos si no hay resultados
+      }
+    } catch (error) {
+      console.error('Error al obtener impresoras:', error);
+    }
+  };
+  const obtenerComputadoresIP = async (tipoBusqueda, valorBusqueda) => {
+    try {
+      let url;
+      if (tipoBusqueda === 'ip') {
+        url = `http://localhost:8000/api/inventario/computador/listarIP/${valorBusqueda}`;
+      } else {
+        console.error('Tipo de búsqueda inválido:', tipoBusqueda);
+        return; // Manejar el tipo de búsqueda inválido
+      }
+
+      const respuesta = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const datos = await respuesta.json();
+
+      if (datos && datos.verificarPro) {
+        setComputadores([datos.verificarPro]); // Suponiendo un único resultado
+      } else {
+        console.error('API no responde o registro no encontrado.');
+        setComputadores([]); // Limpiar datos si no hay resultados
+      }
+    } catch (error) {
+      console.error('Error al obtener impresoras:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchImpresoras = async () => {
@@ -118,7 +182,47 @@ export default function Home() {
 
   return (
     <>
-      <Narvbar />
+     <Narvbar />
+      <Button variant="success" onClick={handleShowID}>
+        Listar por SERIAL
+      </Button>
+
+      <Modal show={showID} onHide={handleCloseID}>
+        <Modal.Header closeButton>
+          <Modal.Title>Buscar por SERIAL</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Ingrese el serial</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="serial"
+                value={serial}
+                onChange={(e) => setSerial(e.target.value) } />
+              <Button variant="success" onClick={() => obtenerComputadores('serial', serial)}>Buscar</Button>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Header closeButton>
+          <Modal.Title>Buscar por IP</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label><th>Ingrese la ip</th></Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="ip"
+                value={ip}
+                onChange={(e) => setIp(e.target.value) } />
+              <Button variant="success" onClick={() => obtenerComputadoresIP('ip', ip)}>Buscar</Button>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+        </Modal.Footer>
+      </Modal>
       <Table striped bordered hover>
         <thead>
           <tr>

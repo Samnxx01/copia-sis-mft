@@ -37,6 +37,7 @@ export default function Impresoras() {
 */
   
   const [serial, setSerial] = useState('');
+  const [ip, setIp] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -234,6 +235,36 @@ export default function Impresoras() {
       console.error('Error al obtener impresoras:', error);
     }
   };
+  const obtenerImpresorasIP = async (tipoBusqueda, valorBusqueda) => {
+    try {
+      let url;
+      if (tipoBusqueda === 'ip') {
+        url = `http://localhost:8000/api/inventario/listarIP/${valorBusqueda}`;
+      } else {
+        console.error('Tipo de búsqueda inválido:', tipoBusqueda);
+        return; // Manejar el tipo de búsqueda inválido
+      }
+
+      const respuesta = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const datos = await respuesta.json();
+
+      if (datos && datos.verificarPro) {
+        setImpresoras([datos.verificarPro]); // Suponiendo un único resultado
+      } else {
+        console.error('API no responde o registro no encontrado.');
+        setImpresoras([]); // Limpiar datos si no hay resultados
+      }
+    } catch (error) {
+      console.error('Error al obtener impresoras:', error);
+    }
+  };
+
 
   return (
     <>
@@ -255,8 +286,24 @@ export default function Impresoras() {
                 type="text"
                 placeholder="serial"
                 value={serial}
-                onChange={(e) => setSerial(e.target.value)} />
+                onChange={(e) => setSerial(e.target.value) } />
               <Button variant="success" onClick={() => obtenerImpresoras('serial', serial)}>Buscar</Button>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Header closeButton>
+          <Modal.Title>Buscar por IP</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label><th>Ingrese el serial</th></Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="ip"
+                value={ip}
+                onChange={(e) => setIp(e.target.value) } />
+              <Button variant="success" onClick={() => obtenerImpresorasIP('ip', ip)}>Buscar</Button>
             </Form.Group>
           </Form>
         </Modal.Body>
