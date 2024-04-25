@@ -6,11 +6,15 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { Navigate } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
+import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 
 export default function Computadores() {
 
   const { user } = useContext(userContext)
+  const navigate = useNavigate();
   
 
   const [formData, setFormData] = useState({
@@ -49,12 +53,18 @@ export default function Computadores() {
   const handleCloseEli = () => setShowEliminar(false);
   const handleShowEli = () => setShowEliminar(true);
   
+  const inputRefIP = useRef(null);  
 
   const handleDeleteComputador = (id) => {
     setShowEliminar(true);
     setIdEliminar(id)
   }
-  
+
+  const handleKeyPressIP = (event) => {
+    if (event.key === 'Enter') {
+      obtenerComputadores('ip', ip);
+    }
+  };
 
   
   const handleEliminarClick = async (id) => {
@@ -74,6 +84,7 @@ export default function Computadores() {
       if (response.status === 200) {
         // Eliminación exitosa
         alert(`Computadores "${numeroSerie}" eliminada con éxito.`);
+        console.log('Buscar clicked (or keyboard key pressed)');
       } else {
         // Error al eliminar
         const data = await response.json();
@@ -173,6 +184,14 @@ export default function Computadores() {
     fetchImpresoras();
   }, []);
 
+  //CLICK CON TECLADO
+  const inputRefSerial = useRef(null); 
+  const handleKeyPressSerial = (event) => {
+    if (event.key === 'Enter') {
+      obtenerComputadores('serial', serial);
+    }
+  };
+
 
 
   const handleInputChange = (e) => {
@@ -228,11 +247,15 @@ export default function Computadores() {
     setSelectedFile(file);
   };
 
+  const enviarMenu = () => {
+    navigate('/Home');
+  };
 
   return (
     <>
       <Narvbar />
-      <Button variant="primary" onClick={handleShow}>
+      <Button style={{marginRight:'20px'}} variant="dark" onClick={enviarMenu}>Menu principal</Button>
+      <Button style={{marginRight:'20px'}} variant="primary" onClick={handleShow}>
         Aqui agregas el computador
       </Button>
       <Button variant="success" onClick={handleShowID}>
@@ -241,7 +264,7 @@ export default function Computadores() {
 
       <Modal show={showID} onHide={handleCloseID}>
         <Modal.Header closeButton>
-          <Modal.Title>Buscar por SERIAL</Modal.Title>
+          <Modal.Title >Buscar por SERIAL</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -252,7 +275,7 @@ export default function Computadores() {
                 placeholder="serial"
                 value={serial}
                 onChange={(e) => setSerial(e.target.value) } />
-              <Button variant="success" onClick={() => obtenerComputadores('serial', serial)}>Buscar</Button>
+              <Button variant="success" ref={inputRefSerial} onKeyDown={handleKeyPressSerial} onClick={() => obtenerComputadores('serial', serial)}>Buscar</Button>
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -267,7 +290,9 @@ export default function Computadores() {
                 type="text"
                 placeholder="ip"
                 value={ip}
-                onChange={(e) => setIp(e.target.value) } />
+                onChange={(e) => setIp(e.target.value) }
+                ref={inputRefIP} 
+                onKeyDown={handleKeyPressIP}  />
               <Button variant="success" onClick={() => obtenerComputadoresIP('ip', ip)}>Buscar</Button>
             </Form.Group>
           </Form>
@@ -275,7 +300,7 @@ export default function Computadores() {
         <Modal.Footer>
         </Modal.Footer>
       </Modal>
-      <Modal show={show} onHide={handleClose}>
+      <Modal  show={show} onHide={handleClose} >
         <Modal.Header closeButton>
           <Modal.Title>Quieres ingresar un computador?</Modal.Title>
         </Modal.Header>
