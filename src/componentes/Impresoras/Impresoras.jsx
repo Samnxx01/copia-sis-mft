@@ -6,11 +6,14 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { Navigate } from 'react-router-dom';
 import userContext from '../../auth/hooks/UseContext';
+import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Impresoras() {
 
   const { user } = useContext(userContext)
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     sedes: '',
@@ -264,13 +267,28 @@ export default function Impresoras() {
       console.error('Error al obtener impresoras:', error);
     }
   };
+    const inputRefIP = useRef(null);  
+    const inputRefSerial = useRef(null); 
 
+    const handleKeyPressSerial = (event) => {
+      if (event.key === 'Enter') {
+        obtenerComputadores('serial', serial);
+      }
+    };
+    const handleKeyPressIP = (event) => {
+      if (event.key === 'Enter') {
+        obtenerComputadores('ip', ip);
+      }
+    };
+    const enviarMenu = () => {
+      navigate('/Home');
+    };
 
   return (
     <>
       <Narvbar />
-
-      <Button variant="success" onClick={handleShowID}>
+      <Button style={{marginRight:'20px'}} variant="dark" onClick={enviarMenu}>Menu principal</Button>
+      <Button style={{marginRight:'20px'}} variant="success" onClick={handleShowID}>
         Listar por SERIAL
       </Button>
 
@@ -287,7 +305,7 @@ export default function Impresoras() {
                 placeholder="serial"
                 value={serial}
                 onChange={(e) => setSerial(e.target.value) } />
-              <Button variant="success" onClick={() => obtenerImpresoras('serial', serial)}>Buscar</Button>
+              <Button variant="success" ref={inputRefSerial} onKeyDown={handleKeyPressSerial} onClick={() => obtenerImpresoras('serial', serial)}>Buscar</Button>
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -303,7 +321,7 @@ export default function Impresoras() {
                 placeholder="ip"
                 value={ip}
                 onChange={(e) => setIp(e.target.value) } />
-              <Button variant="success" onClick={() => obtenerImpresorasIP('ip', ip)}>Buscar</Button>
+              <Button variant="success" ref={inputRefIP} onKeyDown={handleKeyPressIP} onClick={() => obtenerImpresorasIP('ip', ip)}>Buscar</Button>
             </Form.Group>
           </Form>
         </Modal.Body>

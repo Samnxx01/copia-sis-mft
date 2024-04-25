@@ -4,6 +4,7 @@ import Impresoras from '../componentes/Impresoras/Impresoras'
 import Computadores from '../componentes/Computadores/Computadores'
 import Reportes from '../componentes/Reportestecnicos/Reportescompu'
 import Home from '../componentes/Home/Home'
+import Table from '../componentes/datatable/datable'
 
 export default function PrivateRoute() {
   return (
@@ -13,6 +14,7 @@ export default function PrivateRoute() {
       <Route path="/impresoras" element={<Impresoras />} />
       <Route path="/reportes" element={<Reportes />} />
       <Route path="/computadores" element={<Computadores />} />
+      <Route path="/prueba" element={<Table />} />
     </Routes>
   );
 }

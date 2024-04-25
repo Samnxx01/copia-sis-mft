@@ -290,10 +290,8 @@ export default function Computadores() {
                 type="text"
                 placeholder="ip"
                 value={ip}
-                onChange={(e) => setIp(e.target.value) }
-                ref={inputRefIP} 
-                onKeyDown={handleKeyPressIP}  />
-              <Button variant="success" onClick={() => obtenerComputadoresIP('ip', ip)}>Buscar</Button>
+                onChange={(e) => setIp(e.target.value) }  />
+              <Button variant="success" ref={inputRefIP} onKeyDown={handleKeyPressIP} onClick={() => obtenerComputadoresIP('ip', ip)}>Buscar</Button>
             </Form.Group>
           </Form>
         </Modal.Body>
