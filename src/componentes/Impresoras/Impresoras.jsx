@@ -8,6 +8,10 @@ import { Navigate } from 'react-router-dom';
 import userContext from '../../auth/hooks/UseContext';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DataGrid } from '@mui/x-data-grid';
+
+
+
 
 
 export default function Impresoras() {
@@ -26,19 +30,20 @@ export default function Impresoras() {
     contador: '',
     fecha: ''
   });
- /* const [formDataEdi, setFormDataEdi] = useState({
-    sedes: impresoras.sedes,
-    pisos: impresoras.pisos,
-    ip: impresoras.ip,
-    serial: impresoras.serial,
-    ubicacion: impresoras.ubicacion,
-    mac: impresoras.mac,
-    marca: impresoras.marca,
-    contador: impresoras.contador,
-    fecha: impresoras.fecha
-  });
-*/
-  
+  /* const [formDataEdi, setFormDataEdi] = useState({
+     sedes: impresoras.sedes,
+     pisos: impresoras.pisos,
+     ip: impresoras.ip,
+     serial: impresoras.serial,
+     ubicacion: impresoras.ubicacion,
+     mac: impresoras.mac,
+     marca: impresoras.marca,
+     contador: impresoras.contador,
+     fecha: impresoras.fecha
+   });
+ */
+  const [seleccionaModificacion, setSeleccionModificacion] = useState({})
+
   const [serial, setSerial] = useState('');
   const [ip, setIp] = useState('');
 
@@ -46,6 +51,7 @@ export default function Impresoras() {
     const { name, value } = e.target;
     setFormData({
       ...formData,
+
       [name]: value,
     });
   };
@@ -79,14 +85,17 @@ export default function Impresoras() {
   //boton de modificar
   const [showModi, setModi] = useState(false);
   const [idModi, setIdModi] = useState('');
- 
+
 
   const handleModificarImpresora = (id) => {
+    const seleccionaModificacion = impresoras.find(impresora => impresora._id === id);
+    setSeleccionModificacion(seleccionaModificacion);
+    setFormData(seleccionaModificacion);
     setModi(true);
-    setIdModi(id)
+    setIdModi(id);
+  };
 
-  }
-  
+
 
   const handleCloseModi = () => setModi(false);
   const handleShowModi = () => setModi(true);
@@ -158,55 +167,59 @@ export default function Impresoras() {
     }
   };
 
- //Logica para modificar impresora
+  //Logica para modificar impresora
   const handleSubmitModificar = async (e, id) => {
     e.preventDefault();
     try {
-      const formDataJSON = JSON.stringify(formData); // Convert formData to JSON
       const response = await fetch(`http://localhost:8000/api/inventario/modificarImpresoras/${id}`, {
         method: 'PUT',
-        body: formDataJSON,
+        headers: {
+          'Content-Type': 'application/json',
+          'codificado': ''
+        },
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        alert('¡Modificacion exitoso!');
-        Navigate('/impresoras'); // Redirigir a la página de inicio de sesión
+        alert('¡Modificación exitosa!');
+        Navigate('/impresoras'); // Redirigir a la página de impresoras
       } else {
-        console.error('datos incorrectos');
-        alert('Error en el registro');
+        console.error('Datos incorrectos');
+        alert('Error en la modificación');
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
     }
   };
 
+
   //Logica para listar impresoras 
-      useEffect(() => {
-        const fetchImpresoras = async () => {
-          try {
-            const response = await fetch('http://localhost:8000/api/inventario/listarimpresoras', {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
+  useEffect(() => {
+    const fetchImpresoras = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/inventario/listarimpresoras', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-            const data = await response.json();
+        const data = await response.json();
 
-            // Ensure data has the expected structure and property
-            if (data && data.registrosImpreso) {
-              setImpresoras(data.registrosImpreso);
-            } else {
-              console.error('la api no responde.');
-              // Handle the case where the API data is missing or has an unexpected structure
-            }
-          } catch (error) {
-            console.error('Error fetching impresoras:', error);
-          }
-        };
+        // Ensure data has the expected structure and property
+        if (data && data.registrosImpreso) {
+          setImpresoras(data.registrosImpreso);
+        } else {
+          console.error('la api no responde.');
+          // Handle the case where the API data is missing or has an unexpected structure
+        }
+      } catch (error) {
+        console.error('Error fetching impresoras:', error);
+      }
+    };
 
-        fetchImpresoras();
-      }, []);
+    fetchImpresoras();
+  }, []);
 
   //api de buscar por id-serial
   const obtenerImpresoras = async (tipoBusqueda, valorBusqueda) => {
@@ -239,8 +252,10 @@ export default function Impresoras() {
     }
   };
   const obtenerImpresorasIP = async (tipoBusqueda, valorBusqueda) => {
+
     try {
       let url;
+
       if (tipoBusqueda === 'ip') {
         url = `http://localhost:8000/api/inventario/listarIP/${valorBusqueda}`;
       } else {
@@ -267,331 +282,362 @@ export default function Impresoras() {
       console.error('Error al obtener impresoras:', error);
     }
   };
-    const inputRefIP = useRef(null);  
-    const inputRefSerial = useRef(null); 
 
-    const handleKeyPressSerial = (event) => {
-      if (event.key === 'Enter') {
-        obtenerComputadores('serial', serial);
-      }
-    };
-    const handleKeyPressIP = (event) => {
-      if (event.key === 'Enter') {
-        obtenerComputadores('ip', ip);
-      }
-    };
-    const enviarMenu = () => {
-      navigate('/Home');
-    };
+  const inputRefIP = useRef(null);
+  const inputRefSerial = useRef(null);
+
+  const handleKeyPressSerial = (event) => {
+    if (event.key === 'Enter') {
+      obtenerImpresoras('serial', serial);
+    }
+  };
+  const handleKeyPressIP = (event) => {
+    if (event.key === 'Enter') {
+      obtenerImpresorasIP('ip', ip);
+    }
+  };
+  const enviarMenu = () => {
+    navigate('/Home');
+  };
+  const columns = [
+    { field: 'id', headerName: 'id', width: 130 },
+    { field: 'sedes', headerName: 'Sedes', width: 130 },
+    { field: 'pisos', headerName: 'Pisos', width: 130 },
+    { field: 'ip', headerName: 'IP', width: 130 },
+    { field: 'serial', headerName: 'Serial', width: 130 },
+    { field: 'ubicacion', headerName: 'Ubicacion', width: 130 },
+    { field: 'mac', headerName: 'MAC', width: 130 },
+    { field: 'marca', headerName: 'Marca', width: 130 },
+    { field: 'contador', headerName: 'Contador', width: 130 },
+    { field: 'fecha', headerName: 'Fecha', width: 130 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      sortable: false,
+      width: 200,
+      renderCell: (params) => (
+        <>
+          <Button variant="danger" onClick={() => { handleDeleteImpresora(params.row.id) }} >Eliminar</Button>
+          <Button variant="info"  onClick={() => handleModificarImpresora(params.row.id)}>Modificar</Button>
+        </>
+      ),
+    },
+  ];
+  const rows = impresoras.map((impresora) => ({
+    id: impresora._id,
+    sedes: impresora.sedes,
+    pisos: impresora.pisos,
+    ip: impresora.ip,
+    serial: impresora.serial,
+    ubicacion: impresora.ubicacion,
+    mac: impresora.mac,
+    marca: impresora.marca,
+    contador: impresora.contador,
+    fecha: impresora.fecha,
+  }));
 
   return (
     <>
-      <Narvbar />
-      <Button style={{marginRight:'20px'}} variant="dark" onClick={enviarMenu}>Menu principal</Button>
-      <Button style={{marginRight:'20px'}} variant="success" onClick={handleShowID}>
-        Listar por SERIAL
-      </Button>
-
-      <Modal show={showID} onHide={handleCloseID}>
-        <Modal.Header closeButton>
-          <Modal.Title>Buscar por SERIAL</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Ingrese el serial</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="serial"
-                value={serial}
-                onChange={(e) => setSerial(e.target.value) } />
-              <Button variant="success" ref={inputRefSerial} onKeyDown={handleKeyPressSerial} onClick={() => obtenerImpresoras('serial', serial)}>Buscar</Button>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Header closeButton>
-          <Modal.Title>Buscar por IP</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label><th>Ingrese el serial</th></Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="ip"
-                value={ip}
-                onChange={(e) => setIp(e.target.value) } />
-              <Button variant="success" ref={inputRefIP} onKeyDown={handleKeyPressIP} onClick={() => obtenerImpresorasIP('ip', ip)}>Buscar</Button>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-        </Modal.Footer>
-      </Modal>
-      <Button variant="primary" onClick={handleShow}>
-        Aqui se registra la impresora
-      </Button>
-
-
-
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Agregar impresora</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <br />
-          <th>sede</th>
-          <Form.Control type="text" placeholder="sede"
-            id="sedes"
-            name="sedes"
-            autoComplete="sedes"
-            value={formData.sedes}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>piso</th>
-          <Form.Control type="text" placeholder="Piso"
-            id="pisos"
-            name="pisos"
-            autoComplete="pisos"
-            value={formData.pisos}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>ip</th>
-          <Form.Control type="text" placeholder="ip obligatorio"
-            id="ip"
-            name="ip"
-            autoComplete="ip"
-            value={formData.ip}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>serial</th>
-          <Form.Control type="text" placeholder="serial"
-            id="serial"
-            name="serial"
-            autoComplete="email"
-            value={formData.serial}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>mac</th>
-          <Form.Control type="text" placeholder="Mac"
-            id="mac"
-            name="mac"
-            autoComplete="mac"
-            value={formData.mac}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>ubicacion</th>
-          <Form.Control type="text" placeholder="ubicacion"
-            id="ubicacion"
-            name="ubicacion"
-            autoComplete="ubicacion"
-            value={formData.ubicacion}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>marca</th>
-          <Form.Control type="text" placeholder="Marca"
-            id="marca"
-            name="marca"
-            autoComplete="marca"
-            value={formData.marca}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>contador</th>
-          <Form.Control type="text" placeholder="Contador"
-            id="contador"
-            name="contador"
-            autoComplete="email"
-            value={formData.contador}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>fecha</th>
-          <Form.Control type="text" placeholder="Fecha"
-            id="fecha"
-            name="fecha"
-            autoComplete="fecha"
-            value={formData.fecha}
-            onChange={handleInputChange}
-            required />
-          <br />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cerrar
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Impresoras</title>
+        </head>
+        <body>
+          <Narvbar />
+          <Button style={{ marginRight: '20px' }} variant="dark" onClick={enviarMenu}>Menu principal</Button>
+          <Button style={{ marginRight: '20px' }} variant="success" onClick={handleShowID}>
+            Listar por SERIAL
           </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Guardar
+
+          <Modal show={showID} onHide={handleCloseID}>
+            <Modal.Header closeButton>
+              <Modal.Title>Buscar por SERIAL</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                  <Form.Label>Ingrese el serial</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="serial"
+                    value={serial}
+                    onChange={(e) => setSerial(e.target.value)} />
+                  <Button variant="success" ref={inputRefSerial} onKeyDown={handleKeyPressSerial} onClick={() => obtenerImpresoras('serial', serial)}>Buscar</Button>
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Header closeButton>
+              <Modal.Title>Buscar por IP</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                  <Form.Label><th>Ingrese el serial</th></Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="ip"
+                    value={ip}
+                    onChange={(e) => setIp(e.target.value)} />
+                  <Button variant="success" ref={inputRefIP} onKeyDown={handleKeyPressIP} onClick={() => obtenerImpresorasIP('ip', ip)}>Buscar</Button>
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+            </Modal.Footer>
+          </Modal>
+          <Button variant="primary" onClick={handleShow}>
+            Aqui se registra la impresora
           </Button>
-        </Modal.Footer>
-      </Modal>
 
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>sede</th>
-            <th>piso</th>
-            <th>ip</th>
-            <th>serial</th>
-            <th>ubicacion</th>
-            <th>mac</th>
-            <th>marca</th>
-            <th>contador</th>
-            <th>fecha</th>
 
-          </tr>
-        </thead>
-        <tbody>
-          {!impresoras.length && <p>Loading impresoras...</p>} {/* Conditional rendering while data is loading */}
-          {impresoras.map((regis, index) => (
-            <tr key={index}>
-              <td>{regis.sedes}</td>
-              <td>{regis.pisos}</td>
-              <td>{regis.ip}</td>
-              <td>{regis.serial}</td>
-              <td>{regis.ubicacion}</td>
-              <td>{regis.mac}</td>
-              <td>{regis.marca}</td>
-              <td>{regis.contador}</td>
-              <td>{regis.fecha}</td>
-              <Button variant="danger" onClick={() => {
-                handleDeleteImpresora(regis._id)
-              }}>
-                Eliminar
+
+          <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Agregar impresora</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <br />
+              <th>sede</th>
+              <Form.Control type="text" placeholder="sede"
+                id="sedes"
+                name="sedes"
+                autoComplete="sedes"
+                value={formData.sedes}
+                onChange={handleInputChange}
+                required />
+              <br />
+              <th>piso</th>
+              <Form.Control type="text" placeholder="Piso"
+                id="pisos"
+                name="pisos"
+                autoComplete="pisos"
+                value={formData.pisos}
+                onChange={handleInputChange}
+                required />
+              <br />
+              <th>ip</th>
+              <Form.Control type="text" placeholder="ip obligatorio"
+                id="ip"
+                name="ip"
+                autoComplete="ip"
+                value={formData.ip}
+                onChange={handleInputChange}
+                required />
+              <br />
+              <th>serial</th>
+              <Form.Control type="text" placeholder="serial"
+                id="serial"
+                name="serial"
+                autoComplete="email"
+                value={formData.serial}
+                onChange={handleInputChange}
+                required />
+              <br />
+              <th>mac</th>
+              <Form.Control type="text" placeholder="Mac"
+                id="mac"
+                name="mac"
+                autoComplete="mac"
+                value={formData.mac}
+                onChange={handleInputChange}
+                required />
+              <br />
+              <th>ubicacion</th>
+              <Form.Control type="text" placeholder="ubicacion"
+                id="ubicacion"
+                name="ubicacion"
+                autoComplete="ubicacion"
+                value={formData.ubicacion}
+                onChange={handleInputChange}
+                required />
+              <br />
+              <th>marca</th>
+              <Form.Control type="text" placeholder="Marca"
+                id="marca"
+                name="marca"
+                autoComplete="marca"
+                value={formData.marca}
+                onChange={handleInputChange}
+                required />
+              <br />
+              <th>contador</th>
+              <Form.Control type="text" placeholder="Contador"
+                id="contador"
+                name="contador"
+                autoComplete="email"
+                value={formData.contador}
+                onChange={handleInputChange}
+                required />
+              <br />
+              <th>fecha</th>
+              <Form.Control type="text" placeholder="Fecha"
+                id="fecha"
+                name="fecha"
+                autoComplete="fecha"
+                value={formData.fecha}
+                onChange={handleInputChange}
+                required />
+              <br />
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Cerrar
               </Button>
-
-              <Button variant="info" onClick={() => {
-                handleModificarImpresora(regis._id)
-              }}>
-                Modificar
+              <Button variant="primary" onClick={handleSubmit}>
+                Guardar
               </Button>
-            </tr>
+            </Modal.Footer>
+          </Modal>
 
-          ))}
-        </tbody>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>sede</th>
+                <th>piso</th>
+                <th>ip</th>
+                <th>serial</th>
+                <th>ubicacion</th>
+                <th>mac</th>
+                <th>marca</th>
+                <th>contador</th>
+                <th>fecha</th>
 
-        <Modal show={showModi} onHide={handleCloseModi}>
-          <Modal.Header closeButton>
-            <Modal.Title>Quieres modificar?</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <br />
-            <th>sede</th>
-            <Form.Control type="text" placeholder="sede"
-              id="sedes"
-              name="sedes"
-              autoComplete="sedes"
-              value={formData.sedes}
-              onChange={handleInputChange}
-              required />
+              </tr>
+            </thead>
+            <div style={{ height: 400, width: '100%' }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 5 },
+                },
+              }}
+              pageSizeOptions={[5, 10, 15, 20, 25, 30, 35, 40, 45, 50]}
+              checkboxSelection
+            />
+            </div>
 
-            <br />
-            <th>piso</th>
-            <Form.Control type="text" placeholder="Piso"
-              id="pisos"
-              name="pisos"
-              autoComplete="pisos"
-              value={formData.pisos}
-              onChange={handleInputChange}
-              required />
-            <br />
-            <th>ip</th>
-            <Form.Control type="text" placeholder="ip obligatorio"
-              id="ip"
-              name="ip"
-              autoComplete="ip"
-              value={formData.ip}
-              onChange={handleInputChange}
-              required />
-            <br />
-            <th>serial</th>
-            <Form.Control type="text" placeholder="serial"
-              id="serial"
-              name="serial"
-              autoComplete="email"
-              value={formData.serial}
-              onChange={handleInputChange}
-              required />
-            <br />
-            <th>mac</th>
-            <Form.Control type="text" placeholder="Mac"
-              id="mac"
-              name="mac"
-              autoComplete="mac"
-              value={formData.mac}
-              onChange={handleInputChange}
-              required />
-            <br />
-            <th>ubicacion</th>
-            <Form.Control type="text" placeholder="ubicacion"
-              id="ubicacion"
-              name="ubicacion"
-              autoComplete="ubicacion"
-              value={formData.ubicacion}
-              onChange={handleInputChange}
-              required />
-            <br />
-            <th>marca</th>
-            <Form.Control type="text" placeholder="Marca"
-              id="marca"
-              name="marca"
-              autoComplete="marca"
-              value={formData.marca}
-              onChange={handleInputChange}
-              required />
-            <br />
-            <th>contador</th>
-            <Form.Control type="text" placeholder="Contador"
-              id="contador"
-              name="contador"
-              autoComplete="email"
-              value={formData.contador}
-              onChange={handleInputChange}
-              required />
-            <br />
-            <th>fecha</th>
-            <Form.Control type="text" placeholder="Fecha"
-              id="fecha"
-              name="fecha"
-              autoComplete="fecha"
-              value={formData.fecha}
-              onChange={handleInputChange}
-              required />
-            <br />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModi}>
-              Cerrar
-            </Button>
-            <Button variant="success" onClick={(e)=>handleSubmitModificar(e, idModi)}>
-              Modificado
-            </Button>
-          </Modal.Footer>
-        </Modal>
-        <Modal show={showEliminar} onHide={handleCerrar}>
-          <Modal.Header>
-            <Modal.Title>¿Quiere eliminar impresora?</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>¿Estas seguro de eliminar?</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCerrar}>
-              Close
-            </Button>
-            <Button variant="danger" onClick={() => {
-              handleEliminarClick(idEliminar)
-            }}>
-              Eliminar
-            </Button>
-          </Modal.Footer>
-        </Modal>
+            <Modal show={showModi} onHide={handleCloseModi}>
+              <Modal.Header closeButton>
+                <Modal.Title>Quieres modificar?</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <br />
+                <th>sede</th>
+                <Form.Control type="text" placeholder="sede"
+                  id="sedes"
+                  name="sedes"
+                  autoComplete="sedes"
+                  value={formData.sedes}
+                  onChange={handleInputChange}
+                  required />
 
-      </Table>
+                <br />
+                <th>piso</th>
+                <Form.Control type="text" placeholder="Piso"
+                  id="pisos"
+                  name="pisos"
+                  autoComplete="pisos"
+                  value={formData.pisos}
+                  onChange={handleInputChange}
+                  required />
+                <br />
+                <th>ip</th>
+                <Form.Control type="text" placeholder="ip obligatorio"
+                  id="ip"
+                  name="ip"
+                  autoComplete="ip"
+                  value={formData.ip}
+                  onChange={handleInputChange}
+                  required />
+                <br />
+                <th>serial</th>
+                <Form.Control type="text" placeholder="serial"
+                  id="serial"
+                  name="serial"
+                  autoComplete="email"
+                  value={formData.serial}
+                  onChange={handleInputChange}
+                  required />
+                <br />
+                <th>mac</th>
+                <Form.Control type="text" placeholder="Mac"
+                  id="mac"
+                  name="mac"
+                  autoComplete="mac"
+                  value={formData.mac}
+                  onChange={handleInputChange}
+                  required />
+                <br />
+                <th>ubicacion</th>
+                <Form.Control type="text" placeholder="ubicacion"
+                  id="ubicacion"
+                  name="ubicacion"
+                  autoComplete="ubicacion"
+                  value={formData.ubicacion}
+                  onChange={handleInputChange}
+                  required />
+                <br />
+                <th>marca</th>
+                <Form.Control type="text" placeholder="Marca"
+                  id="marca"
+                  name="marca"
+                  autoComplete="marca"
+                  value={formData.marca}
+                  onChange={handleInputChange}
+                  required />
+                <br />
+                <th>contador</th>
+                <Form.Control type="text" placeholder="Contador"
+                  id="contador"
+                  name="contador"
+                  autoComplete="email"
+                  value={formData.contador}
+                  onChange={handleInputChange}
+                  required />
+                <br />
+                <th>fecha</th>
+                <Form.Control type="text" placeholder="Fecha"
+                  id="fecha"
+                  name="fecha"
+                  autoComplete="fecha"
+                  value={formData.fecha}
+                  onChange={handleInputChange}
+                  required />
+                <br />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseModi}>
+                  Cerrar
+                </Button>
+                <Button variant="success" onClick={(e) => handleSubmitModificar(e, idModi)}>
+                  Modificado
+                </Button>
+              </Modal.Footer>
+            </Modal>
+            <Modal show={showEliminar} onHide={handleCerrar}>
+              <Modal.Header>
+                <Modal.Title>¿Quiere eliminar impresora?</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>¿Estas seguro de eliminar?</Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleCerrar}>
+                  Close
+                </Button>
+                <Button variant="danger" onClick={() => {
+                  handleEliminarClick(idEliminar)
+                }}>
+                  Eliminar
+                </Button>
+              </Modal.Footer>
+            </Modal>
+
+          </Table>
+        </body>
+      </html>
     </>
   );
 }

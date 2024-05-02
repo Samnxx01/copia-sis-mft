@@ -6,10 +6,20 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink } from 'react-router-dom';
 import userContext from '../../auth/hooks/UseContext';
+import { useNavigate } from 'react-router-dom';
+
+
+
 
 
 function Narvbar() {
   const {cerrarSesion} = useContext(userContext)
+   const navigate = useNavigate();
+
+      const enviarMenu = () => {
+      navigate('/');
+    };
+
   return (
     <>
     <Navbar expand="lg-expand" className="bg-body-tertiary">
@@ -18,7 +28,8 @@ function Narvbar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Button onClick={() =>{
+            <Button  onClick={() =>{
+              enviarMenu()
               cerrarSesion()
             }}>Logout</Button>
           <NavLink className={'nav-link'} to="/Reportes">Reportes</NavLink>

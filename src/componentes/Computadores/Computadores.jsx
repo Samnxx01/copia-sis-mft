@@ -15,7 +15,7 @@ export default function Computadores() {
 
   const { user } = useContext(userContext)
   const navigate = useNavigate();
-  
+
 
   const [formData, setFormData] = useState({
     fecha: '',
@@ -52,8 +52,8 @@ export default function Computadores() {
   const [idEliminar, setIdEliminar] = useState('');
   const handleCloseEli = () => setShowEliminar(false);
   const handleShowEli = () => setShowEliminar(true);
-  
-  const inputRefIP = useRef(null);  
+
+  const inputRefIP = useRef(null);
 
   const handleDeleteComputador = (id) => {
     setShowEliminar(true);
@@ -66,7 +66,7 @@ export default function Computadores() {
     }
   };
 
-  
+
   const handleEliminarClick = async (id) => {
 
     const computer = computadoress.find(computer => computer._id === id);
@@ -102,7 +102,7 @@ export default function Computadores() {
     try {
       let url;
       if (tipoBusqueda === 'serial') {
-        url = `http://localhost:8000/api/inventario/computador/listarID/${valorBusqueda}`;
+        url = `http://localhost:8000/api/inventario/compu/listarID/${valorBusqueda}`;
       } else {
         console.error('Tipo de búsqueda inválido:', tipoBusqueda);
         return; // Manejar el tipo de búsqueda inválido
@@ -127,12 +127,12 @@ export default function Computadores() {
       console.error('Error al obtener impresoras:', error);
     }
   };
-  
+
   const obtenerComputadoresIP = async (tipoBusqueda, valorBusqueda) => {
     try {
       let url;
       if (tipoBusqueda === 'ip') {
-        url = `http://localhost:8000/api/inventario/computador/listarIP/${valorBusqueda}`;
+        url = `http://localhost:8000/api/inventario/compu/listarIP/${valorBusqueda}`;
       } else {
         console.error('Tipo de búsqueda inválido:', tipoBusqueda);
         return; // Manejar el tipo de búsqueda inválido
@@ -185,7 +185,7 @@ export default function Computadores() {
   }, []);
 
   //CLICK CON TECLADO
-  const inputRefSerial = useRef(null); 
+  const inputRefSerial = useRef(null);
   const handleKeyPressSerial = (event) => {
     if (event.key === 'Enter') {
       obtenerComputadores('serial', serial);
@@ -254,8 +254,8 @@ export default function Computadores() {
   return (
     <>
       <Narvbar />
-      <Button style={{marginRight:'20px'}} variant="dark" onClick={enviarMenu}>Menu principal</Button>
-      <Button style={{marginRight:'20px'}} variant="primary" onClick={handleShow}>
+      <Button style={{ marginRight: '20px' }} variant="dark" onClick={enviarMenu}>Menu principal</Button>
+      <Button style={{ marginRight: '20px' }} variant="primary" onClick={handleShow}>
         Aqui agregas el computador
       </Button>
       <Button variant="success" onClick={handleShowID}>
@@ -274,7 +274,7 @@ export default function Computadores() {
                 type="text"
                 placeholder="serial"
                 value={serial}
-                onChange={(e) => setSerial(e.target.value) } />
+                onChange={(e) => setSerial(e.target.value)} />
               <Button variant="success" ref={inputRefSerial} onKeyDown={handleKeyPressSerial} onClick={() => obtenerComputadores('serial', serial)}>Buscar</Button>
             </Form.Group>
           </Form>
@@ -290,7 +290,7 @@ export default function Computadores() {
                 type="text"
                 placeholder="ip"
                 value={ip}
-                onChange={(e) => setIp(e.target.value) }  />
+                onChange={(e) => setIp(e.target.value)} />
               <Button variant="success" ref={inputRefIP} onKeyDown={handleKeyPressIP} onClick={() => obtenerComputadoresIP('ip', ip)}>Buscar</Button>
             </Form.Group>
           </Form>
@@ -298,7 +298,7 @@ export default function Computadores() {
         <Modal.Footer>
         </Modal.Footer>
       </Modal>
-      <Modal  show={show} onHide={handleClose} >
+      <Modal show={show} onHide={handleClose} >
         <Modal.Header closeButton>
           <Modal.Title>Quieres ingresar un computador?</Modal.Title>
         </Modal.Header>
@@ -512,7 +512,12 @@ export default function Computadores() {
                 onChange={handleInputChange}
                 required />
             </Form.Group>
-          </Form></Modal.Body>
+            <Form.Group controlId="formFile" className="mb-3">
+              <Form.Label>Default file input example</Form.Label>
+              <Form.Control type="file" />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Cerrar
@@ -588,10 +593,10 @@ export default function Computadores() {
             <Button variant="secondary" onClick={handleCloseEli}>
               Close
             </Button>
-            <Button variant="primary" onClick={()=>{
+            <Button variant="primary" onClick={() => {
               handleEliminarClick(idEliminar)
             }}>
-             Eliminar
+              Eliminar
             </Button>
           </Modal.Footer>
         </Modal>

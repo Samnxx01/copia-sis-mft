@@ -15,6 +15,7 @@ import userContext from '../hooks/UseContext';
 export default function Login() {
 
     const {addUser} = useContext(userContext)
+
     
    
     const navigate = useNavigate();
@@ -33,6 +34,7 @@ export default function Login() {
             [name]: value,
         });
     };
+    
 
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -52,6 +54,7 @@ export default function Login() {
             
             const data = await response.json();
               addUser(data)
+              localStorage.setItem('user', JSON.stringify(data));
               alert('¡Inicio de sesion exitoso');
               navigate('/Home'); // Redirigir a la página de inicio de sesión
           } else {
@@ -66,11 +69,19 @@ export default function Login() {
 
   return (
     <>
-    <Container className="d-flex justify-content-center align-items-center h-100"> {/* Utiliza clases de Bootstrap para centrar vertical y horizontalmente */}
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login</title>
+      </head>
+      <body  style={{backgroundColor:'green', height:"800px"}}>
+      <Container className="d-flex justify-content-center align-items-center h-100"> {/* Utiliza clases de Bootstrap para centrar vertical y horizontalmente */}
       <Row>
         <Col>
-          <Form className="login-form"> {/* Agrega una clase para aplicar estilos personalizados */}
-          <Form.Text className="text">Ingrese su credenciales</Form.Text>
+        <h1 style={{textAlign:'center'}}>Bienvenidos al departamento de  sistemas</h1>
+          <Form className="login-form" style={{ width: '250px', justifyItems: 'center', display: 'block', textAlign: 'center' , marginTop:'50px'}}> {/* Agrega una clase para aplicar estilos personalizados */}
+          <Form.Text className="text"  >Ingrese su credenciales</Form.Text>
           <Form.Group className="mb-3" >
               <Form.Label>Usuario</Form.Label>
               <Form.Control
@@ -113,6 +124,9 @@ export default function Login() {
         </Col>
       </Row>
     </Container>
+        
+      </body>
+      </html>
     </>
   );
 }
