@@ -8,6 +8,7 @@ import { Navigate } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DataGrid } from '@mui/x-data-grid';
 
 
 
@@ -42,18 +43,31 @@ export default function Computadores() {
   });
 
   const [computadoress, setComputadores] = useState([]);
+  const [seleccionaModificacion, setSeleccionModificacion] = useState({})
   const [serial, setSerial] = useState('');
   const [ip, setIp] = useState('');
   const handleCloseID = () => setShowID(false);
   const handleShowID = () => setShowID(true);
   const [showID, setShowID] = useState(false);
-
+  const [idModi, setIdModi] = useState('');
   const [showEliminar, setShowEliminar] = useState(false);
   const [idEliminar, setIdEliminar] = useState('');
   const handleCloseEli = () => setShowEliminar(false);
   const handleShowEli = () => setShowEliminar(true);
+  const [showModi, setModi] = useState(false);
 
   const inputRefIP = useRef(null);
+
+  const handleModificarCompu = (id) => {
+    const seleccionaModificacion = computadoress.find(compus => compus._id === id);
+    setSeleccionModificacion(seleccionaModificacion);
+    setFormData(seleccionaModificacion);
+    setModi(true);
+    setIdModi(id);
+  };
+  
+  const handleCloseModi = () => setModi(false);
+
 
   const handleDeleteComputador = (id) => {
     setShowEliminar(true);
@@ -71,12 +85,10 @@ export default function Computadores() {
 
     const computer = computadoress.find(computer => computer._id === id);
     const numeroSerie = computer.serial;
-    console.log(computer)
-
     try {
 
       // Enviar la solicitud DELETE a la API sisa
-      const response = await fetch(`http://localhost:8000/api/inventario/eliminarComputadores/${id}`, {
+      const response = await fetch(`http://localhost:8000/api/inventario/eliminarComputadora/${id}`, {
         method: 'DELETE',
       });
 
@@ -234,6 +246,29 @@ export default function Computadores() {
       console.error('Error en la solicitud:', error);
     }
   };
+  const handleSubmitModificar = async (e, id) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:8000/api/inventario/modificarComputadora/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'codificado': ''
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert('¡Modificación exitosa!');
+        Navigate('/impresoras'); // Redirigir a la página de impresoras
+      } else {
+        console.error('Datos incorrectos');
+        alert('Error en la modificación');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  };
 
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -250,6 +285,66 @@ export default function Computadores() {
   const enviarMenu = () => {
     navigate('/Home');
   };
+  const columns = [
+    { field: 'id', headerName: 'id', width: 130 },
+    { field: 'fecha', headerName: 'FECHA', width: 130 },
+    { field: 'sede', headerName: 'SEDES', width: 130 },
+    { field: 'ubicacion', headerName: 'UBICACION', width: 130 },
+    { field: 'area', headerName: 'AREA', width: 130 },
+    { field: 'marca', headerName: 'MARCA', width: 130 },
+    { field: 'nombre_equipo', headerName: 'NOMBRE EQUIPO', width: 130 },
+    { field: 'sistema_operativo', headerName: 'SISTEMA OPERATIVO', width: 130 },
+    { field: 'placa', headerName: 'PLACA', width: 130 },
+    { field: 'disco_duro', headerName: 'DISCO DURO', width: 130 },
+    { field: 'memoria_ram', headerName: 'MEMORIA RAM', width: 130 },
+    { field: 'serial', headerName: 'SERIAL', width: 130 },
+    { field: 'mac', headerName: 'MAC', width: 130 },
+    { field: 'ip', headerName: 'IP', width: 130 },
+    { field: 'usuario', headerName: 'USUARIO', width: 130 },
+    { field: 'clave', headerName: 'CLAVE', width: 130 },
+    { field: 'nombre_asignado', headerName: 'NOMBRE ASIGNADO', width: 130 },
+    { field: 'cedula', headerName: 'CEDULA', width: 130 },
+    { field: 'dominio', headerName: 'DOMINIO', width: 130 },
+    { field: 'fecha_mantenimiento', headerName: 'FECHA MANTENIMIENTO', width: 130 },
+    { field: 'tecnico', headerName: 'TECNICO', width: 130 },
+    { field: 'observaciones', headerName: 'OBSERVACION', width: 130 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      sortable: false,
+      width: 200,
+      renderCell: (params) => (
+        <>
+          <Button variant="danger" onClick={() => { handleDeleteComputador(params.row.id) }} >Eliminar</Button>
+          <Button variant="info" onClick={() => handleModificarCompu(params.row.id)}>Modificar</Button>
+        </>
+      ),
+    },
+  ];
+  const rows = computadoress.map((regis) => ({
+    id: regis._id,
+    fecha: regis.fecha,
+    sede: regis.sede,
+    ubicacion: regis.ubicacion,
+    area: regis.area,
+    marca: regis.marca,
+    nombre_equipo: regis.nombre_equipo,
+    sistema_operativo: regis.sistema_operativo,
+    placa: regis.placa,
+    disco_duro: regis.disco_duro,
+    memoria_ram: regis.memoria_ram,
+    serial: regis.serial,
+    mac: regis.mac,
+    ip: regis.ip,
+    usuario: regis.usuario,
+    clave: regis.clave,
+    nombre_asignado: regis.nombre_asignado,
+    cedula: regis.cedula,
+    dominio: regis.dominio,
+    fecha_mantenimiento: regis.fecha_mantenimiento,
+    tecnico: regis.tecnico,
+    observaciones: regis.observaciones,
+  }));
 
   return (
     <>
@@ -528,62 +623,7 @@ export default function Computadores() {
         </Modal.Footer>
       </Modal>
       <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>fecha</th>
-            <th>sede</th>
-            <th>ubicacion</th>
-            <th>nombre equipo</th>
-            <th>sistema operativo</th>
-            <th>placa</th>
-            <th>disco duro</th>
-            <th>memoria ram</th>
-            <th>ip</th>
-            <th>serial</th>
-            <th>mac</th>
-            <th>marca</th>
-            <th>usuario</th>
-            <th>clave</th>
-            <th>nombre asignado</th>
-            <th>cedula</th>
-            <th>fecha mantenimiento</th>
-            <th>tecnico</th>
-            <th>dominio</th>
-            <th>observacion</th>
-          </tr>
-        </thead>
-        <tbody>
-          {!computadoress.length && <p>Loading impresoras...</p>} {/* Conditional rendering while data is loading */}
-          {computadoress.map((regis, index) => (
-            <tr key={index}>
-              <td>{regis.fecha}</td>
-              <td>{regis.sede}</td>
-              <td>{regis.ubicacion}</td>
-              <td>{regis.nombre_equipo}</td>
-              <td>{regis.sistema_operativo}</td>
-              <td>{regis.placa}</td>
-              <td>{regis.disco_duro}</td>
-              <td>{regis.memoria_ram}</td>
-              <td>{regis.ip}</td>
-              <td>{regis.serial}</td>
-              <td>{regis.mac}</td>
-              <td>{regis.marca}</td>
-              <td>{regis.usuario}</td>
-              <td>{regis.clave}</td>
-              <td>{regis.nombre_asignado}</td>
-              <td>{regis.cedula}</td>
-              <td>{regis.fecha_mantenimiento}</td>
-              <td>{regis.tecnico}</td>
-              <td>{regis.dominio}</td>
-              <td>{regis.observaciones}</td>
-              <Button variant="danger" onClick={() => {
-                handleDeleteComputador(regis._id)
-              }}>
-                Eliminar
-              </Button>
-            </tr>
-          ))}
-        </tbody>
+
         <Modal show={showEliminar} onHide={handleCloseEli}>
           <Modal.Header closeButton>
             <Modal.Title>¿Quieres Eliminar computador?</Modal.Title>
@@ -601,6 +641,204 @@ export default function Computadores() {
           </Modal.Footer>
         </Modal>
       </Table>
+      <div style={{ height: 900, width: '100%' }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
+          }}
+          pageSizeOptions={[5, 10, 15, 20, 25, 30, 35, 40, 45, 50]}
+          checkboxSelection
+        />
+      </div>
+      <Modal show={showModi} onHide={handleCloseModi}>
+        <Modal.Header closeButton>
+          <Modal.Title>Quieres modificar?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <br />
+          <th>Fecha</th>
+          <Form.Control type="text" placeholder="FECHA"
+            id="fecha"
+            name="fecha"
+            autoComplete="fecha"
+            value={formData.fecha}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Sedes</th>
+          <Form.Control type="text" placeholder="SEDES"
+            id="sede"
+            name="sede"
+            autoComplete="sede"
+            value={formData.sede}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Ubicacion</th>
+          <Form.Control type="text" placeholder="UBICACION"
+            id="ubicacion"
+            name="ubicacion"
+            autoComplete="ubicacion"
+            value={formData.ubicacion}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Marca</th>
+          <Form.Control type="text" placeholder="MARCA"
+            id="marca"
+            name="marca"
+            autoComplete="marca"
+            value={formData.marca}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Nombre equipo</th>
+          <Form.Control type="text" placeholder="NOMBRE EQUIPO"
+            id="nombre_equipo"
+            name="nombre_equipo"
+            autoComplete="nombre_equipo"
+            value={formData.nombre_equipo}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Sistema operativo</th>
+          <Form.Control type="text" placeholder="SISTEMA OPERATIVO"
+            id="sistema_operativo"
+            name="sistema_operativo"
+            autoComplete="sistema_operativo"
+            value={formData.sistema_operativo}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Placa</th>
+          <Form.Control type="text" placeholder="PLACA"
+            id="placa"
+            name="placa"
+            autoComplete="placa"
+            value={formData.placa}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Disco duro</th>
+          <Form.Control type="text" placeholder="DISCO DURO"
+            id="duro"
+            name="duro"
+            autoComplete="duro"
+            value={formData.duro}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Serial</th>
+          <Form.Control type="text" placeholder="SERIAL"
+            id="serial"
+            name="serial"
+            autoComplete="serial"
+            value={formData.serial}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Mac</th>
+          <Form.Control type="text" placeholder="Mac"
+            id="mac"
+            name="mac"
+            autoComplete="mac"
+            value={formData.mac}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Ip</th>
+          <Form.Control type="text" placeholder="IP"
+            id="ip"
+            name="ip"
+            autoComplete="ip"
+            value={formData.ip}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Usuario</th>
+          <Form.Control type="text" placeholder="USUARIO"
+            id="usuario"
+            name="usuario"
+            autoComplete="usuario"
+            value={formData.usuario}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Clave</th>
+          <Form.Control type="text" placeholder="CLAVE"
+            id="clave"
+            name="clave"
+            autoComplete="clave"
+            value={formData.clave}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Nombre asignado</th>
+          <Form.Control type="text" placeholder="NOMBRE ASIGNADO"
+            id="nombre_asignado"
+            name="nombre_asignado"
+            autoComplete="nombre_asignado"
+            value={formData.nombre_asignado}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Cedula</th>
+          <Form.Control type="text" placeholder="CEDULA"
+            id="cedula"
+            name="cedula"
+            autoComplete="cedula"
+            value={formData.cedula}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Fecha mantenimiento</th>
+          <Form.Control type="text" placeholder="FECHA MANTENIMIENTO"
+            id="fecha_mantenimiento"
+            name="fecha_mantenimiento"
+            autoComplete="fecha_mantenimiento"
+            value={formData.fecha_mantenimiento}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <th>Fecha mantenimiento</th>
+          <Form.Control type="text" placeholder="TECNICO"
+            id="tecnico"
+            name="tecnico"
+            autoComplete="tecnico"
+            value={formData.tecnico}
+            onChange={handleInputChange}
+            required />
+          <br />
+          <Form.Group className="mb-3">
+            <th>Dominio</th>
+            <Form.Select aria-label="Dominio" name="dominio" value={formData.dominio} onChange={handleInputChange}>
+              <option value="">Seleccione el dominio</option>
+              <option value="SI">Si</option>
+              <option value="NO">No</option>
+            </Form.Select>
+          </Form.Group>
+          <Form.Control type="text" placeholder="OBSERVACIONES"
+            id="observaciones"
+            name="observaciones"
+            autoComplete="observaciones"
+            value={formData.observaciones}
+            onChange={handleInputChange}
+            required />
+          <br />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModi}>
+            Cerrar
+          </Button>
+          <Button variant="success" onClick={(e) => handleSubmitModificar(e, idModi)}>
+            Modificado
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

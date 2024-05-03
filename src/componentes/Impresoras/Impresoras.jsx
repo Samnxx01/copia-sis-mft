@@ -317,24 +317,24 @@ export default function Impresoras() {
       width: 200,
       renderCell: (params) => (
         <>
-          <Button variant="danger" onClick={() => { handleDeleteImpresora(params.row.id) }} >Eliminar</Button>
+          <Button variant="danger"  onClick={() => { handleDeleteImpresora(params.row.id) }} >Eliminar</Button>
           <Button variant="info"  onClick={() => handleModificarImpresora(params.row.id)}>Modificar</Button>
         </>
       ),
     },
   ];
-  const rows = impresoras.map((impresora) => ({
-    id: impresora._id,
-    sedes: impresora.sedes,
-    pisos: impresora.pisos,
-    ip: impresora.ip,
-    serial: impresora.serial,
-    ubicacion: impresora.ubicacion,
-    mac: impresora.mac,
-    marca: impresora.marca,
-    contador: impresora.contador,
-    fecha: impresora.fecha,
-  }));
+    const rows = impresoras.map((impresora) => ({
+      id: impresora._id,
+      sedes: impresora.sedes,
+      pisos: impresora.pisos,
+      ip: impresora.ip,
+      serial: impresora.serial,
+      ubicacion: impresora.ubicacion,
+      mac: impresora.mac,
+      marca: impresora.marca,
+      contador: impresora.contador,
+      fecha: impresora.fecha,
+    }));
 
   return (
     <>
@@ -492,34 +492,6 @@ export default function Impresoras() {
           </Modal>
 
           <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>sede</th>
-                <th>piso</th>
-                <th>ip</th>
-                <th>serial</th>
-                <th>ubicacion</th>
-                <th>mac</th>
-                <th>marca</th>
-                <th>contador</th>
-                <th>fecha</th>
-
-              </tr>
-            </thead>
-            <div style={{ height: 400, width: '100%' }}>
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 5 },
-                },
-              }}
-              pageSizeOptions={[5, 10, 15, 20, 25, 30, 35, 40, 45, 50]}
-              checkboxSelection
-            />
-            </div>
-
             <Modal show={showModi} onHide={handleCloseModi}>
               <Modal.Header closeButton>
                 <Modal.Title>Quieres modificar?</Modal.Title>
@@ -636,6 +608,19 @@ export default function Impresoras() {
             </Modal>
 
           </Table>
+          <div style={{ height: 400, width: '100%' }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 5 },
+              },
+            }}
+            pageSizeOptions={[5, 10, 15, 20, 25, 30, 35, 40, 45, 50]}
+            checkboxSelection
+          />
+        </div>
         </body>
       </html>
     </>
