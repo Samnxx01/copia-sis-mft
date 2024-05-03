@@ -6,7 +6,10 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
 
-/*const [formData, setFormData] = useState({
+
+export default function Reportescompu() {
+
+  /*const [formData, setFormData] = useState({
   fecha: '',
   numero_caso: '',
   computadores: '',
@@ -58,6 +61,32 @@ const handleSubmit = async (e) => {
     console.error('Error en la solicitud:', error);
   }
 };
+useEffect(() => {
+  const fetchComputadores = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/inventario/listarcompu', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      // Ensure data has the expected structure and property
+      if (data && data.listarCompu) {
+        setComputadores(data.listarCompu);
+      } else {
+        console.error('la api no responde.');
+        // Handle the case where the API data is missing or has an unexpected structure
+      }
+    } catch (error) {
+      console.error('Error fetching impresoras:', error);
+    }
+  };
+
+  fetchComputadores();
+}, []);
 
 /*useEffect(() => {
   const fetchImpresoras = async () => {
@@ -85,10 +114,16 @@ const handleSubmit = async (e) => {
 
   fetchImpresoras();
 }, []);*/
-export default function Reportescompu() {
   return (
     <>
-      <Narvbar />
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Reportes</title>
+    </head>
+    <body>
+    <Narvbar />
       <Form>
         <Row className="mb-3">
           <Form.Group as={Col} controlId="formGridFecha">
@@ -105,12 +140,22 @@ export default function Reportescompu() {
           <th className="mb-3">Datos del usuario</th>
           <Form.Group className="mb-3" as={Col}>
             <Form.Label><th>Nombre Completo</th></Form.Label>
-            <Form.Control type="text" placeholder="Nombre completo" />
+            <Form.Select aria-label="Default select example">
+              <option>Open this select menu</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </Form.Select>
           </Form.Group>
 
           <Form.Group as={Col} controlId="formGridPassword">
             <Form.Label><th>Cedula</th></Form.Label>
-            <Form.Control type="text" placeholder="Cedula" />
+            <Form.Select aria-label="Default select example">
+              <option>Open this select menu</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </Form.Select>
           </Form.Group>
           <Form.Group as={Col} controlId="formGridEmail">
             <Form.Label><th>Correo electronico</th></Form.Label>
@@ -248,6 +293,8 @@ export default function Reportescompu() {
           Enviar
         </Button>
       </Form>
+    </body>
+    </html>
 
     </>
 
