@@ -65,7 +65,7 @@ export default function Computadores() {
     setModi(true);
     setIdModi(id);
   };
-  
+
   const handleCloseModi = () => setModi(false);
 
 
@@ -348,168 +348,407 @@ export default function Computadores() {
 
   return (
     <>
-      <Narvbar />
-      <Button style={{ marginRight: '20px' }} variant="dark" onClick={enviarMenu}>Menu principal</Button>
-      <Button style={{ marginRight: '20px' }} variant="primary" onClick={handleShow}>
-        Aqui agregas el computador
-      </Button>
-      <Button variant="success" onClick={handleShowID}>
-        Listar por SERIAL
-      </Button>
 
-      <Modal show={showID} onHide={handleCloseID}>
-        <Modal.Header closeButton>
-          <Modal.Title >Buscar por SERIAL</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Ingrese el serial</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="serial"
-                value={serial}
-                onChange={(e) => setSerial(e.target.value)} />
-              <Button variant="success" ref={inputRefSerial} onKeyDown={handleKeyPressSerial} onClick={() => obtenerComputadores('serial', serial)}>Buscar</Button>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Header closeButton>
-          <Modal.Title>Buscar por IP</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label><th>Ingrese la ip</th></Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="ip"
-                value={ip}
-                onChange={(e) => setIp(e.target.value)} />
-              <Button variant="success" ref={inputRefIP} onKeyDown={handleKeyPressIP} onClick={() => obtenerComputadoresIP('ip', ip)}>Buscar</Button>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-        </Modal.Footer>
-      </Modal>
-      <Modal show={show} onHide={handleClose} >
-        <Modal.Header closeButton>
-          <Modal.Title>Quieres ingresar un computador?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3">
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Computadores</title>
+        </head>
+        <body>
+          <Narvbar />
+          <Button style={{ marginRight: '20px' }} variant="dark" onClick={enviarMenu}>Menu principal</Button>
+          <Button style={{ marginRight: '20px' }} variant="primary" onClick={handleShow}>
+            Aqui agregas el computador
+          </Button>
+          <Button variant="success" onClick={handleShowID}>
+            Listar por SERIAL
+          </Button>
+
+          <Modal show={showID} onHide={handleCloseID}>
+            <Modal.Header closeButton>
+              <Modal.Title >Buscar por SERIAL</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                  <Form.Label>Ingrese el serial</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="serial"
+                    value={serial}
+                    onChange={(e) => setSerial(e.target.value)} />
+                  <Button variant="success" ref={inputRefSerial} onKeyDown={handleKeyPressSerial} onClick={() => obtenerComputadores('serial', serial)}>Buscar</Button>
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Header closeButton>
+              <Modal.Title>Buscar por IP</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                  <Form.Label><th>Ingrese la ip</th></Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="ip"
+                    value={ip}
+                    onChange={(e) => setIp(e.target.value)} />
+                  <Button variant="success" ref={inputRefIP} onKeyDown={handleKeyPressIP} onClick={() => obtenerComputadoresIP('ip', ip)}>Buscar</Button>
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+            </Modal.Footer>
+          </Modal>
+          <Modal show={show} onHide={handleClose} >
+            <Modal.Header closeButton>
+              <Modal.Title>Quieres ingresar un computador?</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group className="mb-3">
+                  <th>Fecha</th>
+                  <Form.Control type="text" placeholder="fecha"
+                    id="fecha"
+                    name="fecha"
+                    autoComplete="fecha"
+                    value={formData.fecha}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Sede</th>
+                  <Form.Control type="text" placeholder="sede"
+                    id="sede"
+                    name="sede"
+                    autoComplete="sede"
+                    value={formData.sede}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Ubicacion</th>
+                  <Form.Control type="text" placeholder="ubicacion"
+                    id="ubicacion"
+                    name="ubicacion"
+                    autoComplete="ubicacion"
+                    value={formData.ubicacion}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Area</th>
+                  <Form.Control type="text" placeholder="area"
+                    id="area"
+                    name="area"
+                    autoComplete="area"
+                    value={formData.area}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Marca</th>
+                  <Form.Control type="text" placeholder="marca"
+                    id="marca"
+                    name="marca"
+                    autoComplete="marca"
+                    value={formData.marca}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Nombre equipo</th>
+                  <Form.Control type="text" placeholder="nombre equipo"
+                    id="nombre_equipo"
+                    name="nombre_equipo"
+                    autoComplete="nombre_equipo"
+                    value={formData.nombre_equipo}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Sistema operativo</th>
+                  <Form.Control type="text" placeholder="sistema operativo"
+                    id="sistema_operativo"
+                    name="sistema_operativo"
+                    autoComplete="sistema_operativo"
+                    value={formData.sistema_operativo}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Placa</th>
+                  <Form.Control type="text" placeholder="Placa"
+                    id="placa"
+                    name="placa"
+                    autoComplete="placa"
+                    value={formData.placa}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Disco Duro</th>
+                  <Form.Control type="text" placeholder="disco duro"
+                    id="disco_duro"
+                    name="disco_duro"
+                    autoComplete="disco_duro"
+                    value={formData.disco_duro}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Memoria ram</th>
+                  <Form.Control type="text" placeholder="Memoria ram"
+                    id="memoria_ram"
+                    name="memoria_ram"
+                    autoComplete="memoria_ram"
+                    value={formData.memoria_ram}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Serial</th>
+                  <Form.Control type="text" placeholder="Serial"
+                    id="serial"
+                    name="serial"
+                    autoComplete="serial"
+                    value={formData.serial}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Mac</th>
+                  <Form.Control type="text" placeholder="Mac"
+                    id="mac"
+                    name="mac"
+                    autoComplete="mac"
+                    value={formData.mac}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Ip</th>
+                  <Form.Control type="text" placeholder="ip"
+                    id="ip"
+                    name="ip"
+                    autoComplete="ip"
+                    value={formData.ip}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Usuario</th>
+                  <Form.Control type="text" placeholder="Usuario"
+                    id="usuario"
+                    name="usuario"
+                    autoComplete="usuario"
+                    value={formData.usuario}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Clave</th>
+                  <Form.Control type="text" placeholder="Clave"
+                    id="clave"
+                    name="clave"
+                    autoComplete="clave"
+                    value={formData.clave}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Nombre asignado</th>
+                  <Form.Control type="text" placeholder="Nombre asignado"
+                    id="nombre_asignado"
+                    name="nombre_asignado"
+                    autoComplete="nombre_asignado"
+                    value={formData.nombre_asignado}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Cedula</th>
+                  <Form.Control type="text" placeholder="cedula"
+                    id="cedula"
+                    name="cedula"
+                    autoComplete="cedula"
+                    value={formData.cedula}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Fecha de mantenimiento</th>
+                  <Form.Control type="text" placeholder="fecha mantenimiento"
+                    id="fecha_mantenimiento"
+                    name="fecha_mantenimiento"
+                    autoComplete="fecha_mantenimiento"
+                    value={formData.fecha_mantenimiento}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>tecnico</th>
+                  <Form.Control type="text" placeholder="Tecnico"
+                    id="tecnico"
+                    name="tecnico"
+                    autoComplete="tecnico"
+                    value={formData.tecnico}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Dominio</th>
+                  <Form.Select aria-label="Dominio" name="dominio" value={formData.dominio} onChange={handleInputChange}>
+                    <option value="">Seleccione el dominio</option>
+                    <option value="SI">Si</option>
+                    <option value="NO">No</option>
+                  </Form.Select>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <th>Observaciones</th>
+                  <Form.Control type="text" placeholder="Observaciones"
+                    id="observaciones"
+                    name="observaciones"
+                    autoComplete="observaciones"
+                    value={formData.observaciones}
+                    onChange={handleInputChange}
+                    required />
+                </Form.Group>
+                <Form.Group controlId="formFile" className="mb-3">
+                  <Form.Label>Default file input example</Form.Label>
+                  <Form.Control type="file" />
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Cerrar
+              </Button>
+              <Button variant="primary" onClick={handleSubmit}>
+                Guardar
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <Table striped bordered hover>
+
+            <Modal show={showEliminar} onHide={handleCloseEli}>
+              <Modal.Header closeButton>
+                <Modal.Title>¿Quieres Eliminar computador?</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>¿Estas seguro de eliminar?</Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseEli}>
+                  Close
+                </Button>
+                <Button variant="primary" onClick={() => {
+                  handleEliminarClick(idEliminar)
+                }}>
+                  Eliminar
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          </Table>
+          <div style={{ height: 900, width: '100%' }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 5 },
+                },
+              }}
+              pageSizeOptions={[5, 10, 15, 20, 25, 30, 35, 40, 45, 50]}
+              checkboxSelection
+            />
+          </div>
+          <Modal show={showModi} onHide={handleCloseModi}>
+            <Modal.Header closeButton>
+              <Modal.Title>Quieres modificar?</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <br />
               <th>Fecha</th>
-              <Form.Control type="text" placeholder="fecha"
+              <Form.Control type="text" placeholder="FECHA"
                 id="fecha"
                 name="fecha"
                 autoComplete="fecha"
                 value={formData.fecha}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <th>Sede</th>
-              <Form.Control type="text" placeholder="sede"
+              <br />
+              <th>Sedes</th>
+              <Form.Control type="text" placeholder="SEDES"
                 id="sede"
                 name="sede"
                 autoComplete="sede"
                 value={formData.sede}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
+              <br />
               <th>Ubicacion</th>
-              <Form.Control type="text" placeholder="ubicacion"
+              <Form.Control type="text" placeholder="UBICACION"
                 id="ubicacion"
                 name="ubicacion"
                 autoComplete="ubicacion"
                 value={formData.ubicacion}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <th>Area</th>
-              <Form.Control type="text" placeholder="area"
-                id="area"
-                name="area"
-                autoComplete="area"
-                value={formData.area}
-                onChange={handleInputChange}
-                required />
-            </Form.Group>
-            <Form.Group className="mb-3">
+              <br />
               <th>Marca</th>
-              <Form.Control type="text" placeholder="marca"
+              <Form.Control type="text" placeholder="MARCA"
                 id="marca"
                 name="marca"
                 autoComplete="marca"
                 value={formData.marca}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
+              <br />
               <th>Nombre equipo</th>
-              <Form.Control type="text" placeholder="nombre equipo"
+              <Form.Control type="text" placeholder="NOMBRE EQUIPO"
                 id="nombre_equipo"
                 name="nombre_equipo"
                 autoComplete="nombre_equipo"
                 value={formData.nombre_equipo}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
+              <br />
               <th>Sistema operativo</th>
-              <Form.Control type="text" placeholder="sistema operativo"
+              <Form.Control type="text" placeholder="SISTEMA OPERATIVO"
                 id="sistema_operativo"
                 name="sistema_operativo"
                 autoComplete="sistema_operativo"
                 value={formData.sistema_operativo}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
+              <br />
               <th>Placa</th>
-              <Form.Control type="text" placeholder="Placa"
+              <Form.Control type="text" placeholder="PLACA"
                 id="placa"
                 name="placa"
                 autoComplete="placa"
                 value={formData.placa}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <th>Disco Duro</th>
-              <Form.Control type="text" placeholder="disco duro"
-                id="disco_duro"
-                name="disco_duro"
-                autoComplete="disco_duro"
-                value={formData.disco_duro}
+              <br />
+              <th>Disco duro</th>
+              <Form.Control type="text" placeholder="DISCO DURO"
+                id="duro"
+                name="duro"
+                autoComplete="duro"
+                value={formData.duro}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <th>Memoria ram</th>
-              <Form.Control type="text" placeholder="Memoria ram"
-                id="memoria_ram"
-                name="memoria_ram"
-                autoComplete="memoria_ram"
-                value={formData.memoria_ram}
-                onChange={handleInputChange}
-                required />
-            </Form.Group>
-            <Form.Group className="mb-3">
+              <br />
               <th>Serial</th>
-              <Form.Control type="text" placeholder="Serial"
+              <Form.Control type="text" placeholder="SERIAL"
                 id="serial"
                 name="serial"
                 autoComplete="serial"
                 value={formData.serial}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
+              <br />
               <th>Mac</th>
               <Form.Control type="text" placeholder="Mac"
                 id="mac"
@@ -518,327 +757,98 @@ export default function Computadores() {
                 value={formData.mac}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
+              <br />
               <th>Ip</th>
-              <Form.Control type="text" placeholder="ip"
+              <Form.Control type="text" placeholder="IP"
                 id="ip"
                 name="ip"
                 autoComplete="ip"
                 value={formData.ip}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
+              <br />
               <th>Usuario</th>
-              <Form.Control type="text" placeholder="Usuario"
+              <Form.Control type="text" placeholder="USUARIO"
                 id="usuario"
                 name="usuario"
                 autoComplete="usuario"
                 value={formData.usuario}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
+              <br />
               <th>Clave</th>
-              <Form.Control type="text" placeholder="Clave"
+              <Form.Control type="text" placeholder="CLAVE"
                 id="clave"
                 name="clave"
                 autoComplete="clave"
                 value={formData.clave}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
+              <br />
               <th>Nombre asignado</th>
-              <Form.Control type="text" placeholder="Nombre asignado"
+              <Form.Control type="text" placeholder="NOMBRE ASIGNADO"
                 id="nombre_asignado"
                 name="nombre_asignado"
                 autoComplete="nombre_asignado"
                 value={formData.nombre_asignado}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
+              <br />
               <th>Cedula</th>
-              <Form.Control type="text" placeholder="cedula"
+              <Form.Control type="text" placeholder="CEDULA"
                 id="cedula"
                 name="cedula"
                 autoComplete="cedula"
                 value={formData.cedula}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <th>Fecha de mantenimiento</th>
-              <Form.Control type="text" placeholder="fecha mantenimiento"
+              <br />
+              <th>Fecha mantenimiento</th>
+              <Form.Control type="text" placeholder="FECHA MANTENIMIENTO"
                 id="fecha_mantenimiento"
                 name="fecha_mantenimiento"
                 autoComplete="fecha_mantenimiento"
                 value={formData.fecha_mantenimiento}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <th>tecnico</th>
-              <Form.Control type="text" placeholder="Tecnico"
+              <br />
+              <th>Fecha mantenimiento</th>
+              <Form.Control type="text" placeholder="TECNICO"
                 id="tecnico"
                 name="tecnico"
                 autoComplete="tecnico"
                 value={formData.tecnico}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <th>Dominio</th>
-              <Form.Select aria-label="Dominio" name="dominio" value={formData.dominio} onChange={handleInputChange}>
-                <option value="">Seleccione el dominio</option>
-                <option value="SI">Si</option>
-                <option value="NO">No</option>
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <th>Observaciones</th>
-              <Form.Control type="text" placeholder="Observaciones"
+              <br />
+              <Form.Group className="mb-3">
+                <th>Dominio</th>
+                <Form.Select aria-label="Dominio" name="dominio" value={formData.dominio} onChange={handleInputChange}>
+                  <option value="">Seleccione el dominio</option>
+                  <option value="SI">Si</option>
+                  <option value="NO">No</option>
+                </Form.Select>
+              </Form.Group>
+              <Form.Control type="text" placeholder="OBSERVACIONES"
                 id="observaciones"
                 name="observaciones"
                 autoComplete="observaciones"
                 value={formData.observaciones}
                 onChange={handleInputChange}
                 required />
-            </Form.Group>
-            <Form.Group controlId="formFile" className="mb-3">
-              <Form.Label>Default file input example</Form.Label>
-              <Form.Control type="file" />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cerrar
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Guardar
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <Table striped bordered hover>
-
-        <Modal show={showEliminar} onHide={handleCloseEli}>
-          <Modal.Header closeButton>
-            <Modal.Title>¿Quieres Eliminar computador?</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>¿Estas seguro de eliminar?</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseEli}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={() => {
-              handleEliminarClick(idEliminar)
-            }}>
-              Eliminar
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </Table>
-      <div style={{ height: 900, width: '100%' }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10, 15, 20, 25, 30, 35, 40, 45, 50]}
-          checkboxSelection
-        />
-      </div>
-      <Modal show={showModi} onHide={handleCloseModi}>
-        <Modal.Header closeButton>
-          <Modal.Title>Quieres modificar?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <br />
-          <th>Fecha</th>
-          <Form.Control type="text" placeholder="FECHA"
-            id="fecha"
-            name="fecha"
-            autoComplete="fecha"
-            value={formData.fecha}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Sedes</th>
-          <Form.Control type="text" placeholder="SEDES"
-            id="sede"
-            name="sede"
-            autoComplete="sede"
-            value={formData.sede}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Ubicacion</th>
-          <Form.Control type="text" placeholder="UBICACION"
-            id="ubicacion"
-            name="ubicacion"
-            autoComplete="ubicacion"
-            value={formData.ubicacion}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Marca</th>
-          <Form.Control type="text" placeholder="MARCA"
-            id="marca"
-            name="marca"
-            autoComplete="marca"
-            value={formData.marca}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Nombre equipo</th>
-          <Form.Control type="text" placeholder="NOMBRE EQUIPO"
-            id="nombre_equipo"
-            name="nombre_equipo"
-            autoComplete="nombre_equipo"
-            value={formData.nombre_equipo}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Sistema operativo</th>
-          <Form.Control type="text" placeholder="SISTEMA OPERATIVO"
-            id="sistema_operativo"
-            name="sistema_operativo"
-            autoComplete="sistema_operativo"
-            value={formData.sistema_operativo}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Placa</th>
-          <Form.Control type="text" placeholder="PLACA"
-            id="placa"
-            name="placa"
-            autoComplete="placa"
-            value={formData.placa}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Disco duro</th>
-          <Form.Control type="text" placeholder="DISCO DURO"
-            id="duro"
-            name="duro"
-            autoComplete="duro"
-            value={formData.duro}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Serial</th>
-          <Form.Control type="text" placeholder="SERIAL"
-            id="serial"
-            name="serial"
-            autoComplete="serial"
-            value={formData.serial}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Mac</th>
-          <Form.Control type="text" placeholder="Mac"
-            id="mac"
-            name="mac"
-            autoComplete="mac"
-            value={formData.mac}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Ip</th>
-          <Form.Control type="text" placeholder="IP"
-            id="ip"
-            name="ip"
-            autoComplete="ip"
-            value={formData.ip}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Usuario</th>
-          <Form.Control type="text" placeholder="USUARIO"
-            id="usuario"
-            name="usuario"
-            autoComplete="usuario"
-            value={formData.usuario}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Clave</th>
-          <Form.Control type="text" placeholder="CLAVE"
-            id="clave"
-            name="clave"
-            autoComplete="clave"
-            value={formData.clave}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Nombre asignado</th>
-          <Form.Control type="text" placeholder="NOMBRE ASIGNADO"
-            id="nombre_asignado"
-            name="nombre_asignado"
-            autoComplete="nombre_asignado"
-            value={formData.nombre_asignado}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Cedula</th>
-          <Form.Control type="text" placeholder="CEDULA"
-            id="cedula"
-            name="cedula"
-            autoComplete="cedula"
-            value={formData.cedula}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Fecha mantenimiento</th>
-          <Form.Control type="text" placeholder="FECHA MANTENIMIENTO"
-            id="fecha_mantenimiento"
-            name="fecha_mantenimiento"
-            autoComplete="fecha_mantenimiento"
-            value={formData.fecha_mantenimiento}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <th>Fecha mantenimiento</th>
-          <Form.Control type="text" placeholder="TECNICO"
-            id="tecnico"
-            name="tecnico"
-            autoComplete="tecnico"
-            value={formData.tecnico}
-            onChange={handleInputChange}
-            required />
-          <br />
-          <Form.Group className="mb-3">
-            <th>Dominio</th>
-            <Form.Select aria-label="Dominio" name="dominio" value={formData.dominio} onChange={handleInputChange}>
-              <option value="">Seleccione el dominio</option>
-              <option value="SI">Si</option>
-              <option value="NO">No</option>
-            </Form.Select>
-          </Form.Group>
-          <Form.Control type="text" placeholder="OBSERVACIONES"
-            id="observaciones"
-            name="observaciones"
-            autoComplete="observaciones"
-            value={formData.observaciones}
-            onChange={handleInputChange}
-            required />
-          <br />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModi}>
-            Cerrar
-          </Button>
-          <Button variant="success" onClick={(e) => handleSubmitModificar(e, idModi)}>
-            Modificado
-          </Button>
-        </Modal.Footer>
-      </Modal>
+              <br />
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseModi}>
+                Cerrar
+              </Button>
+              <Button variant="success" onClick={(e) => handleSubmitModificar(e, idModi)}>
+                Modificado
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </body>
+      </html>
     </>
   )
 }
