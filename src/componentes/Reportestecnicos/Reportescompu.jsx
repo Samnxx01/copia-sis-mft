@@ -20,12 +20,15 @@ export default function Reportescompu() {
     area: '',
     serial_parte: '',
     fecha_instalacion: '',
+    tipo_equipo:'',
     extension: '',
     estado: '',
     equipo_garantia: '',
     correo_electronico: '',
     bajas: '',
   });
+  const [options, setOptions] = useState([]);
+
 
   const [usuarios, setUsuarios] = useState([]);
 
@@ -150,7 +153,7 @@ export default function Reportescompu() {
   }, []);
 
 
-  /*useEffect(() => {
+  useEffect(() => {
     const fetchAmbas = async () => {
       try {
         // Realizar las dos llamadas API de manera simultánea
@@ -174,7 +177,7 @@ export default function Reportescompu() {
           })),
           ...computadoresData.listarCompu.map(computador => ({
             value: computador._id,
-            label: computador.nombre_asignado,
+            label: computador.marca,
             type: 'Computador'
           }))
         ];
@@ -187,7 +190,7 @@ export default function Reportescompu() {
     };
 
     fetchAmbas();
-  }, []);*/
+  }, []);
 
   return (
     <>
@@ -195,7 +198,7 @@ export default function Reportescompu() {
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Reportes</title> 
+          <title>Reportes</title>
         </head>
         <body>
           <Narvbar />
@@ -246,7 +249,13 @@ export default function Reportescompu() {
               </Form.Group>
               <Form.Group as={Col} >
                 <Form.Label><th>Correo electronico</th></Form.Label>
-                <Form.Control type="text" placeholder="Correo electronico" />
+                <Form.Control type="email" placeholder="Correo electronico"
+                  id="correo_electronico"
+                  name="correo_electronico"
+                  autoComplete="correo_electronico"
+                  value={formData.correo_electronico}
+                  onChange={handleInputChange}
+                  required />
               </Form.Group>
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Area</th></Form.Label>
@@ -350,9 +359,15 @@ export default function Reportescompu() {
             </Row>
             <Row className="mb-3">
               <th className="mb-3">Datos del equipo</th>
-              <Form.Group as={Col} >
+              <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Tipo de equipo</th></Form.Label>
-                <Form.Control type="text" placeholder="Tipo de equipo" />
+                <Form.Select aria-label="tipo_equipo" name="tipo_equipo" value={formData.tipo_equipo} onChange={handleInputChange}>
+                  <option>Seleccione el equipo</option>
+                  <option value="TODO-EN-UNO">COMPUTADOR</option>
+                  <option value="TORRE-PC">TORRE+MONITOR</option>
+                  <option value="PORTATIL">PORTATIL</option>
+                  <option value="TABLET">TABLET</option>
+                </Form.Select>
               </Form.Group>
 
               <Form.Group as={Col} >
@@ -475,7 +490,7 @@ export default function Reportescompu() {
               </Form.Group>
             </Row>
 
-            <Button  variant="primary" onClick={handleSubmit} type="submit">
+            <Button variant="primary" onClick={handleSubmit} type="submit">
               Enviar
             </Button>
           </Form>

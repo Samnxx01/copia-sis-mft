@@ -5,6 +5,9 @@ import { useState, useEffect, useRef } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { useReactToPrint } from 'react-to-print'
+import {jsPDF} from 'jspdf'
+import Narvbar from '../Narvbar/Narvbar';
+import 'jspdf-autotable';
 
 
 export default function datable() {
@@ -21,6 +24,19 @@ export default function datable() {
     contador: '',
     fecha: ''
   });
+
+
+  const facturarData = {
+    sedes: 'torre A',
+    pisos:'Segundo piso',
+    ip: '10.10.14.52',
+    serial:'8CC32834S2',
+    ubicacion:'UCI PEDRIATICA',
+    mac:'10:10:AB:AC:4C:S2',
+    marca:'RICOH',
+    contador:'154854545',
+    fecha:'10/10/2023'
+  }
 
 
   const handleInputChange = (e) => {
@@ -190,15 +206,45 @@ export default function datable() {
     documentTitle: "Impresoras",
     onAfterPrint: () => alert("Guardado pdf")
   })
-  const generarPDFSeleccionado = () => {
-    if (selectedRows.length > 0) {
-      // Filtramos las filas seleccionadas y las pasamos a la función de generación de PDF
-      const selectedRowsData = rows.filter(row => selectedRows.includes(row.id));
-      generarPDF(selectedRowsData);
-    } else {
-      alert('Por favor selecciona al menos una fila para generar el PDF.');
+
+  const generatePDF =()=>{
+    const doc = new jsPDF()
+   
+    
+    
+   /* impresoras.forEach((impresora, index) => {
+      y += 10; // Incrementar la posición vertical para cada impresora
+      // Agregar los datos de cada impresora al PDF
+      doc.text('Tabla de impresoras', 15,5)
+      doc.text(`Impresora :`, 10, y);
+      doc.text(`Sedes: ${impresora.sedes}`, 10, y + 10);
+      doc.text(`Pisos: ${impresora.pisos}`, 10, y + 20);
+      doc.text(`IP: ${impresora.ip}`, 10, y + 30);
+      doc.text(`Serial: ${impresora.serial}`, 10, y + 40);
+      doc.text(`Ubicacion: ${impresora.ubicacion}`, 10, y + 50);
+      doc.text(`MAC: ${impresora.mac}`, 10, y + 60);
+      doc.text(`Marca: ${impresora.marca}`, 10, y + 70);
+      doc.text(`Contador: ${impresora.contador}`, 10, y + 80);
+      doc.text(`Fecha: ${impresora.fecha}`, 10, y + 90);
+  });*/
+    //crear tablas 
+    
+
+
+    doc.autoTable({
+      head: [['Sedes', 'Pisos', 'IP', 'Serial', 'Ubicacion', 'MAC', 'Marca', 'Contador', 'Fecha']],
+      body: rows.map(impresora => [impresora.sedes, impresora.pisos, impresora.ip, impresora.serial, impresora.ubicacion, impresora.mac, impresora.marca, impresora.contador, impresora.fecha]),
+      styles: {
+        tableWidth: 'wrap', 
+        tableHeight: 'auto' 
+        
     }
-  };
+    });
+  
+    //guardar el pdf un nombre especifico 
+    doc.save(`Tabla de impresoras.pdf`)
+
+  }
   return (
 
     <>
@@ -209,7 +255,7 @@ export default function datable() {
           <title>Prueba</title>
         </head>
         <body>
-
+          <Narvbar/>
           <div style={{ height: 400, width: '100%' }}>
             <DataGrid
               ref={componentPDF}
@@ -340,7 +386,22 @@ export default function datable() {
             </Modal.Footer>
           </Modal>
           <Button variant="success" style={{marginLeft:'4px'}} onClick={generarPDF}> PDF </Button>
-          <Button variant="success"  onClick={generarPDFSeleccionado}>Generar PDF Seleccionado</Button>
+          <div>
+            <div>
+              <div>
+               <h1>Prueba</h1> 
+               <h4>Aqui va el logo</h4>
+               <p>Numero de caso: {facturarData.fecha}</p>
+               <p>Sedes: {facturarData.sedes}</p>
+               <p>ip: {facturarData.ip}</p>
+               <p>serial: {facturarData.serial}</p>
+               <p>Mac: {facturarData.mac}</p>
+               <p>Narca: {facturarData.marca}</p>
+               <p>Contador: {facturarData.contador}</p>
+              </div>
+              <Button variant="success" onClick={generatePDF}>Generar PDF </Button>
+            </div>
+          </div>
         </body>
       </html>
 
