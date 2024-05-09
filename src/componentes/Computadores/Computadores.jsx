@@ -362,7 +362,7 @@ export default function Computadores() {
             Aqui agregas el computador
           </Button>
           <Button variant="success" onClick={handleShowID}>
-            Listar por SERIAL
+            Listar por SERIAL 
           </Button>
 
           <Modal show={showID} onHide={handleCloseID}>

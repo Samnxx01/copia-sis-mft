@@ -59,7 +59,7 @@ export default function Login() {
         navigate('/Home'); // Redirigir a la página de inicio de sesión
       } else {
         console.error('datos incorrectos');
-        alert('Error en el registro');
+        alert('Correo incorrecto o contraseña invalida');
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);

@@ -16,6 +16,7 @@ export default function Registros() {
     correo: '',
     password: '',
     telefono: '',
+    extension: '',
     rol: 'TECNICO',
 });
 
@@ -52,11 +53,24 @@ export default function Registros() {
     }
 };
 
+const enviarMenu = () => {
+  navigate('/');
+};
+
   return (
     <>
-    <Container className="d-flex justify-content-center align-items-center h-100"> {/* Utiliza clases de Bootstrap para centrar vertical y horizontalmente */}
+     
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Registros</title>
+      </head>
+      <body>
+      <Container className="d-flex justify-content-center align-items-center h-100"> {/* Utiliza clases de Bootstrap para centrar vertical y horizontalmente */}
       <Row>
         <Col>
+        
           <Form className="login-form"> {/* Agrega una clase para aplicar estilos personalizados */}
           <Form.Text className="text">Registrarse</Form.Text>
           <Form.Group className="mb-3" >
@@ -129,6 +143,20 @@ export default function Registros() {
               />
               
             </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Extension</Form.Label>
+              <Form.Control
+                type="text"
+                id="telefono"
+                name="telefono"
+                value={formData.extension}
+                onChange={handleInputChange}
+                required
+                placeholder="telefono"
+              />
+              
+            </Form.Group>
               
             </Form.Group>
             <Button variant="primary" type="submit" onClick={handleSubmit} >
@@ -136,8 +164,12 @@ export default function Registros() {
             </Button>
           </Form>
         </Col>
+        <Button style={{ marginRight: '50px' }} variant="info" onClick={enviarMenu}> Regresar al login</Button>
       </Row>
+      
     </Container>
+      </body>
+      </html>
     </>
   )
 }

@@ -1,24 +1,37 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
-// Creamos el contexto de usuario
 const userContext = createContext();
 
-// Creamos un provider para el contexto de usuario
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
-  console.log(user);
-  const addUser = (data) => {
-    setUser(data);
-    localStorage.setItem('user', JSON.stringify(data));
-    console.log(user)
-  }
+
+  const validarRol = (rolRequerido) => {
+    // Validación mejorada para mayor seguridad
+    return user && user.rol === rolRequerido && user.isLoggedIn; // Comprueba rol y estado de inicio de sesión
+  };
+
+  const addUser = (datos) => {
+    setUser(datos);
+    localStorage.setItem('user', JSON.stringify(datos));
+  };
+
   const cerrarSesion = () => {
     setUser(null);
     localStorage.setItem('user', JSON.stringify(null));
-  }
+  };
+
+  console.log(user)
+  const value = {
+    user,
+    setUser,
+    addUser,
+    cerrarSesion,
+    esCoordinador: () => validarRol('COORDINADOR'),
+    esTecnico: () => validarRol('TECNICO'),
+  };
 
   return (
-    <userContext.Provider value={{ user, setUser, addUser, cerrarSesion }}>
+    <userContext.Provider value={value}>
       {children}
     </userContext.Provider>
   );
@@ -26,5 +39,3 @@ export const UserProvider = ({ children }) => {
 
 export default userContext;
 
-
-//me salio 500 el error por importacion , le cambio el nonmbre?

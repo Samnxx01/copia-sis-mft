@@ -30,6 +30,8 @@ export default function Home() {
   const enviarReportes = () => {
     navigate('/Reportes');
   };
+  
+  
   return (
     <>
     <Narvbar/>
@@ -75,6 +77,15 @@ export default function Home() {
             <h1 className='bi bi-upc-scan'></h1>
            <Card.Body>
              <Card.Title style={{marginTop:'40px'}}>Modulos Escaner</Card.Title>
+           </Card.Body>
+           <Card.Body>
+             <Button style={{height:'70px', marginTop:'70px'}}>Ingrese al modulo</Button>
+           </Card.Body>
+         </Card>
+         <Card style={{ width: '300px', justifyItems: 'center', display: 'block', textAlign: 'center', marginLeft:"50px" }}>
+            <h1 className='bi bi-upc-scan'></h1>
+           <Card.Body>
+             <Card.Title style={{marginTop:'40px'}}>Modulos Registro Tecnicos</Card.Title>
            </Card.Body>
            <Card.Body>
              <Button style={{height:'70px', marginTop:'70px'}}>Ingrese al modulo</Button>

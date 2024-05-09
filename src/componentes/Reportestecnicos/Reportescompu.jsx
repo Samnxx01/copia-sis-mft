@@ -20,7 +20,7 @@ export default function Reportescompu() {
     area: '',
     serial_parte: '',
     fecha_instalacion: '',
-    tipo_equipo:'',
+    tipo_equipo: '',
     extension: '',
     estado: '',
     equipo_garantia: '',
@@ -28,6 +28,8 @@ export default function Reportescompu() {
     bajas: '',
   });
   const [options, setOptions] = useState([]);
+  const [optionsMarca, setOptionsMarca] = useState([]);
+  const [optionsMac, setOptionsMac] = useState([]);
 
 
   const [usuarios, setUsuarios] = useState([]);
@@ -154,6 +156,85 @@ export default function Reportescompu() {
 
 
   useEffect(() => {
+    const fetchAmbasMarca = async () => {
+      try {
+        // Realizar las dos llamadas API de manera simultánea
+        const [impresorasResponse, computadoresResponse] = await Promise.all([
+          fetch('http://localhost:8000/api/inventario/listarimpresoras'),
+          fetch('http://localhost:8000/api/inventario/listarcompu')
+        ]);
+
+        // Convertir las respuestas a JSON
+        const [impresorasData, computadoresData] = await Promise.all([
+          impresorasResponse.json(),
+          computadoresResponse.json()
+        ]);
+
+        // Combinar los resultados de ambas llamadas API en una sola lista
+        const combinedOptionss = [
+          ...impresorasData.registrosImpreso.map(impresora => ({
+            value: impresora._id,
+            label: impresora.marca,
+            type: 'Impresora'
+          })),
+          ...computadoresData.listarCompu.map(computador => ({
+            value: computador._id,
+            label: computador.marca,
+            type: 'Computador'
+          }))
+        ];
+
+        // Establecer las opciones combinadas en el estado
+        setOptionsMarca(combinedOptionss);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchAmbasMarca();
+  }, []);
+
+  useEffect(() => {
+    const fetchAmbasMac = async () => {
+      try {
+        // Realizar las dos llamadas API de manera simultánea
+        const [impresorasResponse, computadoresResponse] = await Promise.all([
+          fetch('http://localhost:8000/api/inventario/listarimpresoras'),
+          fetch('http://localhost:8000/api/inventario/listarcompu')
+        ]);
+
+        // Convertir las respuestas a JSON
+        const [impresorasData, computadoresData] = await Promise.all([
+          impresorasResponse.json(),
+          computadoresResponse.json()
+        ]);
+
+        // Combinar los resultados de ambas llamadas API en una sola lista
+        const combinedOptionss = [
+          ...impresorasData.registrosImpreso.map(impresora => ({
+            value: impresora._id,
+            label: impresora.mac,
+            type: 'Impresora'
+          })),
+          ...computadoresData.listarCompu.map(computador => ({
+            value: computador._id,
+            label: computador.mac,
+            type: 'Computador'
+          }))
+        ];
+
+        // Establecer las opciones combinadas en el estado
+        setOptionsMac(combinedOptionss);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchAmbasMac();
+  }, []);
+
+
+  useEffect(() => {
     const fetchAmbas = async () => {
       try {
         // Realizar las dos llamadas API de manera simultánea
@@ -172,12 +253,12 @@ export default function Reportescompu() {
         const combinedOptions = [
           ...impresorasData.registrosImpreso.map(impresora => ({
             value: impresora._id,
-            label: impresora.marca,
+            label: impresora.serial,
             type: 'Impresora'
           })),
           ...computadoresData.listarCompu.map(computador => ({
             value: computador._id,
-            label: computador.marca,
+            label: computador.serial,
             type: 'Computador'
           }))
         ];
@@ -192,11 +273,12 @@ export default function Reportescompu() {
     fetchAmbas();
   }, []);
 
+
   return (
     <>
       <html lang="en">
         <head>
-          <meta charset="UTF-8" />
+          <meta/>
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>Reportes</title>
         </head>
@@ -231,7 +313,7 @@ export default function Reportescompu() {
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Nombre Completo</th></Form.Label>
                 <Form.Select aria-label="Nombre Completo">
-                  <option>Selecciona un usuario</option>
+                  <option value="">Seleccione usuario</option>
                   {computadoress.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.nombre_asignado}</option>
                   ))}
@@ -241,7 +323,7 @@ export default function Reportescompu() {
               <Form.Group as={Col} controlId="formGridPassword">
                 <Form.Label><th>Cedula</th></Form.Label>
                 <Form.Select aria-label="Cedula">
-                  <option>Selecciona un usuario</option>
+                  <option value="">Seleccione cedula</option>
                   {computadoress.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.cedula}</option>
                   ))}
@@ -343,7 +425,6 @@ export default function Reportescompu() {
                   <option value="RECEPCION-URGENCIAS-2">Recepcion(Urgencias 2)</option>
                   <option value="OBSERVACION-URGENCIAS-2">Observacion(Urgencias 2)</option>
                   <option value="TOMA DE MUESTRAS">Toma de muestras</option>
-
                 </Form.Select>
               </Form.Group>
               <Form.Group as={Col}>
@@ -359,6 +440,7 @@ export default function Reportescompu() {
             </Row>
             <Row className="mb-3">
               <th className="mb-3">Datos del equipo</th>
+
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Tipo de equipo</th></Form.Label>
                 <Form.Select aria-label="tipo_equipo" name="tipo_equipo" value={formData.tipo_equipo} onChange={handleInputChange}>
@@ -367,27 +449,46 @@ export default function Reportescompu() {
                   <option value="TORRE-PC">TORRE+MONITOR</option>
                   <option value="PORTATIL">PORTATIL</option>
                   <option value="TABLET">TABLET</option>
+                  <option value="IMPRESORA">IMPRESORA</option>
                 </Form.Select>
               </Form.Group>
-
-              <Form.Group as={Col} >
-                <Form.Label><th>Marca equipo</th></Form.Label>
-                <Form.Control type="text" placeholder="Marca equipo" />
+              <Form.Group className="mb-3" as={Col}>
+                <Form.Label><th>Marca</th></Form.Label>
+                <Form.Select aria-label="Marca" onChange={handleInputChange}>
+                <option value="">Seleccione una marca</option>
+                {optionsMarca.map(option => (
+                  <option key={option.value} value={option.value}>{`${option.label} (${option.type})`}</option>
+                ))}
+              </Form.Select>
               </Form.Group>
 
-              <Form.Group as={Col} >
+              <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Serial</th></Form.Label>
-                <Form.Control type="text" placeholder="Serial" />
+                <Form.Select aria-label="Nombre Completo" onChange={handleInputChange}>
+                <option value="">Seleccione un serial</option>
+                {options.map(option => (
+                  <option key={option.value} value={option.value}>{`${option.label} (${option.type})`}</option>
+                ))}
+              </Form.Select>
               </Form.Group>
 
               <Form.Group as={Col}>
-                <Form.Label><th>Mac</th></Form.Label>
-                <Form.Control type="text" placeholder="Mac" />
+              <Form.Label><th>Mac</th></Form.Label>
+              <Form.Select aria-label="Nombre Completo" onChange={handleInputChange}>
+                <option value="">Seleccione una mac</option>
+                {optionsMac.map(option => (
+                  <option key={option.value} value={option.value}>{`${option.label} (${option.type})`}</option>
+                ))}
+              </Form.Select>
               </Form.Group>
 
               <Form.Group as={Col} >
                 <Form.Label><th>Equipo de garantia</th></Form.Label>
-                <Form.Control type="text" placeholder="Equipo de garantia" />
+                <Form.Select aria-label="equipo_garantia" name="equipo_garantia" value={formData.equipo_garantia} onChange={handleInputChange}>
+                  <option>Seleccione el area</option>
+                  <option value="SI">SI</option>
+                  <option value="NO">N/A</option>
+                </Form.Select>
               </Form.Group>
             </Row>
             <Row className="mb-3">
@@ -395,7 +496,7 @@ export default function Reportescompu() {
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Nombre Completo</th></Form.Label>
                 <Form.Select aria-label="Nombre Completo">
-                  <option>Selecciona un usuario</option>
+                  <option value="">Selecciona un usuario</option>
                   {usuarios.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.nickname}</option>
                   ))}
@@ -403,7 +504,12 @@ export default function Reportescompu() {
               </Form.Group>
               <Form.Group as={Col} >
                 <Form.Label><th>Correo Electronico</th></Form.Label>
-                <Form.Control type="text" placeholder="Correo Electronico" />
+                <Form.Select aria-label="Cedula">
+                  <option value="">Seleccione correo</option>
+                  {usuarios.map(usuario => (
+                    <option key={usuario.id} value={usuario.id}>{usuario.correo}</option>
+                  ))}
+                </Form.Select>
               </Form.Group>
 
               <Form.Group as={Col} >
@@ -413,7 +519,7 @@ export default function Reportescompu() {
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Celular</th></Form.Label>
                 <Form.Select aria-label="Nombre Completo">
-                  <option>Seleccione telefono</option>
+                  <option >Seleccione telefono</option>
                   {usuarios.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.telefono}</option>
                   ))}
@@ -424,22 +530,43 @@ export default function Reportescompu() {
               <th className="mb-3">Datos de la partes instaladas</th>
               <Form.Group as={Col} >
                 <Form.Label><th>Marca</th></Form.Label>
-                <Form.Control type="text" placeholder="Marca" />
+                <Form.Control type="text" placeholder="Marca" id="marca"
+                  name="marca"
+                  autoComplete="marca"
+                  value={formData.marca}
+                  onChange={handleInputChange}
+                  required />
               </Form.Group>
 
               <Form.Group as={Col}>
                 <Form.Label><th>Modelo</th></Form.Label>
-                <Form.Control type="text" placeholder="Modelo" />
+                <Form.Control type="text" placeholder="Modelo"
+                  id="modelo"
+                  name="modelo"
+                  autoComplete="extension"
+                  value={formData.modelo}
+                  onChange={handleInputChange}
+                  required />
               </Form.Group>
 
               <Form.Group as={Col} >
                 <Form.Label><th>Serial de la parte</th></Form.Label>
-                <Form.Control type="text" placeholder="Serial de la parte" />
+                <Form.Control type="text" placeholder="Serial de la parte"                  id="extension"
+                  name="extension"
+                  autoComplete="extension"
+                  value={formData.serial_parte}
+                  onChange={handleInputChange}
+                  required />
               </Form.Group>
 
               <Form.Group as={Col} >
                 <Form.Label><th>Fecha de instalacion</th></Form.Label>
-                <Form.Control type="text" placeholder="Fecha de instalacion" />
+                <Form.Control type="text" placeholder="Fecha de instalacion"                  id="extension"
+                  name="extension"
+                  autoComplete="extension"
+                  value={formData.fecha_instalacion}
+                  onChange={handleInputChange}
+                  required />
               </Form.Group>
             </Row>
             <Row className="mb-3">
