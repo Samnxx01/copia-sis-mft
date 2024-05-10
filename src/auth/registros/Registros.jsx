@@ -148,8 +148,8 @@ const enviarMenu = () => {
               <Form.Label>Extension</Form.Label>
               <Form.Control
                 type="text"
-                id="telefono"
-                name="telefono"
+                id="extension"
+                name="extension"
                 value={formData.extension}
                 onChange={handleInputChange}
                 required

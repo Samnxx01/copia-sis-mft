@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import Narvbar from '../Narvbar/Narvbar'
+import React, { useEffect, useState } from 'react';
+import Narvbar from '../Narvbar/Narvbar';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-
-
 
 export default function Reportescompu() {
 
@@ -15,41 +13,42 @@ export default function Reportescompu() {
     computadores: '',
     impresoras: '',
     registUros: '',
+    tipo_equipo: '',
     marca: '',
     modelo: '',
-    area: '',
     serial_parte: '',
     fecha_instalacion: '',
-    tipo_equipo: '',
     extension: '',
-    estado: '',
-    equipo_garantia: '',
     correo_electronico: '',
+    area: '',
     bajas: '',
+    equipo_garantia: '',
+    activos_fijos: '',
+    diagnostico: '',
   });
-  const [options, setOptions] = useState([]);
-  const [optionsMarca, setOptionsMarca] = useState([]);
-  const [optionsMac, setOptionsMac] = useState([]);
-
 
   const [usuarios, setUsuarios] = useState([]);
-
   const [computadoress, setComputadoresss] = useState([]);
+  const [bajas, setBajas] = useState([]);
+  const [optionsMarca, setOptionsMarca] = useState([]);
+  const [options, setOptions] = useState([]);
+  const [optionsMac, setOptionsMac] = useState([]);
+  const [impresorass, setImpresorass] = useState([])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: value
     });
   };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const id = e.target.id.value;
-
     try {
-
       const response = await fetch('http://localhost:8000/api/inventario/guardarReportes', {
         method: 'POST',
         headers: {
@@ -58,13 +57,12 @@ export default function Reportescompu() {
         },
         body: JSON.stringify({
           ...formData,
-          id,
-        }),
+        })
       });
 
       if (response.ok) {
         alert('¡Registro exitoso!');
-        Navigate('/impresoras'); // Redirigir a la página de inicio de sesión
+        // Redirigir a la página de inicio de sesión
       } else {
         console.error('datos incorrectos');
         alert('Error en el registro');
@@ -73,34 +71,34 @@ export default function Reportescompu() {
       console.error('Error en la solicitud:', error);
     }
   };
+
   useEffect(() => {
-    const fetchComputadores = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/inventario/listarcompu', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const [usuariosResponse, computadoresResponse, bajasResponse] = await Promise.all([
+          fetch('http://localhost:8000/api/inventario/listarUsuario'),
+          fetch('http://localhost:8000/api/inventario/listarcompu'),
+          fetch('http://localhost:8000/api/inventario/listarBajas')
+        ]);
 
-        const data = await response.json();
+        const [usuariosData, computadoresData, bajasData] = await Promise.all([
+          usuariosResponse.json(),
+          computadoresResponse.json(),
+          bajasResponse.json()
+        ]);
 
-        // Ensure data has the expected structure and property
-        if (data && data.listarCompu) {
-          setComputadoresss(data.listarCompu);
-        } else {
-          console.error('la api no responde.');
-          // Handle the case where the API data is missing or has an unexpected structure
-        }
+        setUsuarios(usuariosData.registros);
+        setComputadoresss(computadoresData.listarCompu);
+        setBajas(bajasData.listarBajass);
       } catch (error) {
-        console.error('Error fetching impresoras:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-    fetchComputadores();
-  }, [])
+    fetchData();
+  }, []);
 
-  /*useEffect(() => {
+  useEffect(() => {
     const fetchImpresoras = async () => {
       try {
         const response = await fetch('http://localhost:8000/api/inventario/listarimpresoras', {
@@ -109,12 +107,12 @@ export default function Reportescompu() {
             'Content-Type': 'application/json',
           },
         });
-  
+
         const data = await response.json();
-  
+
         // Ensure data has the expected structure and property
         if (data && data.registrosImpreso) {
-          setImpresoras(data.registrosImpreso);
+          setImpresorass(data.registrosImpreso);
         } else {
           console.error('la api no responde.');
           // Handle the case where the API data is missing or has an unexpected structure
@@ -123,55 +121,24 @@ export default function Reportescompu() {
         console.error('Error fetching impresoras:', error);
       }
     };
-  
+
     fetchImpresoras();
-  }, []);*/
+  }, [])
 
   useEffect(() => {
-    const fetchUsuarios = async () => {
+    const fetchOptions = async () => {
       try {
-        const response = await fetch(' http://localhost:8000/api/inventario/listarUsuario', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        const data = await response.json();
-
-        // Ensure data has the expected structure and property
-        if (data && data.registros) {
-          setUsuarios(data.registros);
-        } else {
-          console.error('la api no responde.');
-          // Handle the case where the API data is missing or has an unexpected structure
-        }
-      } catch (error) {
-        console.error('Error fetching impresoras:', error);
-      }
-    };
-
-    fetchUsuarios();
-  }, []);
-
-
-  useEffect(() => {
-    const fetchAmbasMarca = async () => {
-      try {
-        // Realizar las dos llamadas API de manera simultánea
         const [impresorasResponse, computadoresResponse] = await Promise.all([
           fetch('http://localhost:8000/api/inventario/listarimpresoras'),
           fetch('http://localhost:8000/api/inventario/listarcompu')
         ]);
 
-        // Convertir las respuestas a JSON
         const [impresorasData, computadoresData] = await Promise.all([
           impresorasResponse.json(),
           computadoresResponse.json()
         ]);
 
-        // Combinar los resultados de ambas llamadas API en una sola lista
-        const combinedOptionss = [
+        const combinedOptionsMarca = [
           ...impresorasData.registrosImpreso.map(impresora => ({
             value: impresora._id,
             label: impresora.marca,
@@ -184,73 +151,7 @@ export default function Reportescompu() {
           }))
         ];
 
-        // Establecer las opciones combinadas en el estado
-        setOptionsMarca(combinedOptionss);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchAmbasMarca();
-  }, []);
-
-  useEffect(() => {
-    const fetchAmbasMac = async () => {
-      try {
-        // Realizar las dos llamadas API de manera simultánea
-        const [impresorasResponse, computadoresResponse] = await Promise.all([
-          fetch('http://localhost:8000/api/inventario/listarimpresoras'),
-          fetch('http://localhost:8000/api/inventario/listarcompu')
-        ]);
-
-        // Convertir las respuestas a JSON
-        const [impresorasData, computadoresData] = await Promise.all([
-          impresorasResponse.json(),
-          computadoresResponse.json()
-        ]);
-
-        // Combinar los resultados de ambas llamadas API en una sola lista
-        const combinedOptionss = [
-          ...impresorasData.registrosImpreso.map(impresora => ({
-            value: impresora._id,
-            label: impresora.mac,
-            type: 'Impresora'
-          })),
-          ...computadoresData.listarCompu.map(computador => ({
-            value: computador._id,
-            label: computador.mac,
-            type: 'Computador'
-          }))
-        ];
-
-        // Establecer las opciones combinadas en el estado
-        setOptionsMac(combinedOptionss);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchAmbasMac();
-  }, []);
-
-
-  useEffect(() => {
-    const fetchAmbas = async () => {
-      try {
-        // Realizar las dos llamadas API de manera simultánea
-        const [impresorasResponse, computadoresResponse] = await Promise.all([
-          fetch('http://localhost:8000/api/inventario/listarimpresoras'),
-          fetch('http://localhost:8000/api/inventario/listarcompu')
-        ]);
-
-        // Convertir las respuestas a JSON
-        const [impresorasData, computadoresData] = await Promise.all([
-          impresorasResponse.json(),
-          computadoresResponse.json()
-        ]);
-
-        // Combinar los resultados de ambas llamadas API en una sola lista
-        const combinedOptions = [
+        const combinedOptionsSerial = [
           ...impresorasData.registrosImpreso.map(impresora => ({
             value: impresora._id,
             label: impresora.serial,
@@ -263,14 +164,28 @@ export default function Reportescompu() {
           }))
         ];
 
-        // Establecer las opciones combinadas en el estado
-        setOptions(combinedOptions);
+        const combinedOptionsMac = [
+          ...impresorasData.registrosImpreso.map(impresora => ({
+            value: impresora._id,
+            label: impresora.mac,
+            type: 'Impresora'
+          })),
+          ...computadoresData.listarCompu.map(computador => ({
+            value: computador._id,
+            label: computador.mac,
+            type: 'Computador'
+          }))
+        ];
+
+        setOptionsMarca(combinedOptionsMarca);
+        setOptions(combinedOptionsSerial);
+        setOptionsMac(combinedOptionsMac);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error al cargar la informacion:', error);
       }
     };
 
-    fetchAmbas();
+    fetchOptions();
   }, []);
 
 
@@ -278,13 +193,13 @@ export default function Reportescompu() {
     <>
       <html lang="en">
         <head>
-          <meta/>
+          <meta />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>Reportes</title>
         </head>
         <body>
           <Narvbar />
-          <Form>
+          <Form >
             <Row className="mb-3">
               <Form.Group as={Col} >
                 <Form.Label><th>Fecha</th></Form.Label>
@@ -312,8 +227,8 @@ export default function Reportescompu() {
               <th className="mb-3">Datos del usuario</th>
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Nombre Completo</th></Form.Label>
-                <Form.Select aria-label="Nombre Completo">
-                  <option value="">Seleccione usuario</option>
+                <Form.Select aria-label="computadores" name="computadores" value={data.nombre_asignado} onChange={handleInputChange}>
+                  <option>Seleccione usuario</option>
                   {computadoress.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.nombre_asignado}</option>
                   ))}
@@ -322,8 +237,8 @@ export default function Reportescompu() {
 
               <Form.Group as={Col} controlId="formGridPassword">
                 <Form.Label><th>Cedula</th></Form.Label>
-                <Form.Select aria-label="Cedula">
-                  <option value="">Seleccione cedula</option>
+                <Form.Select aria-label="computadores" name="computadores" value={data.cedula} onChange={handleInputChange}>
+                  <option>Seleccione cedula</option>
                   {computadoress.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.cedula}</option>
                   ))}
@@ -341,7 +256,7 @@ export default function Reportescompu() {
               </Form.Group>
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Area</th></Form.Label>
-                <Form.Select aria-label="Area" name="area" value={formData.area} onChange={handleInputChange}>
+                <Form.Select aria-label="area" name="area" value={formData.area} onChange={handleInputChange}>
                   <option>Seleccione el area</option>
                   <option value="CAJA-CLINICA">Caja clinica</option>
                   <option value="FARMACIA">Farmacia</option>
@@ -454,37 +369,38 @@ export default function Reportescompu() {
               </Form.Group>
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Marca</th></Form.Label>
-                <Form.Select aria-label="Marca" onChange={handleInputChange}>
-                <option value="">Seleccione una marca</option>
-                {optionsMarca.map(option => (
-                  <option key={option.value} value={option.value}>{`${option.label} (${option.type})`}</option>
-                ))}
-              </Form.Select>
+                <Form.Select aria-label="marca" name="marca" onChange={handleInputChange}>
+                  <option value="">Seleccione una marca</option>
+                  {optionsMarca.map(option => (
+                    <option key={option.value} value={option.value}>{`${option.label} (${option.type})`}</option>
+                  ))}
+                </Form.Select>
               </Form.Group>
 
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Serial</th></Form.Label>
-                <Form.Select aria-label="Nombre Completo" onChange={handleInputChange}>
-                <option value="">Seleccione un serial</option>
-                {options.map(option => (
-                  <option key={option.value} value={option.value}>{`${option.label} (${option.type})`}</option>
-                ))}
-              </Form.Select>
+                <Form.Select aria-label="computadores" name="computadores" value={formData.computadores} onChange={handleInputChange}>
+                  <option value="">Seleccione un serial</option>
+                  {options.map(option => (
+                    <option key={option.value} value={option.value}>{`${option.label} (${option.type})`}</option>
+                  ))}
+                </Form.Select>
               </Form.Group>
 
               <Form.Group as={Col}>
-              <Form.Label><th>Mac</th></Form.Label>
-              <Form.Select aria-label="Nombre Completo" onChange={handleInputChange}>
-                <option value="">Seleccione una mac</option>
-                {optionsMac.map(option => (
-                  <option key={option.value} value={option.value}>{`${option.label} (${option.type})`}</option>
-                ))}
-              </Form.Select>
+                <Form.Label><th>Mac</th></Form.Label>
+                <Form.Select aria-label="Nombre Completo" onChange={handleInputChange}>
+                  <option value="">Seleccione una mac</option>
+                  {optionsMac.map(option => (
+                    <option key={option.value} value={option.value}>{`${option.label} (${option.type})`}</option>
+                  ))}
+                </Form.Select>
               </Form.Group>
 
               <Form.Group as={Col} >
                 <Form.Label><th>Equipo de garantia</th></Form.Label>
-                <Form.Select aria-label="equipo_garantia" name="equipo_garantia" value={formData.equipo_garantia} onChange={handleInputChange}>
+                <Form.Select aria-label="equipo_garantia" name="equipo_garantia" value={formData.equipo_garantia}
+                 onChange={handleInputChange}>
                   <option>Seleccione el area</option>
                   <option value="SI">SI</option>
                   <option value="NO">N/A</option>
@@ -496,7 +412,7 @@ export default function Reportescompu() {
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Nombre Completo</th></Form.Label>
                 <Form.Select aria-label="Nombre Completo">
-                  <option value="">Selecciona un usuario</option>
+                  <option >Selecciona un usuario</option>
                   {usuarios.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.nickname}</option>
                   ))}
@@ -517,9 +433,10 @@ export default function Reportescompu() {
                 <Form.Control type="text" placeholder="Telefono/extension" />
               </Form.Group>
               <Form.Group className="mb-3" as={Col}>
+
                 <Form.Label><th>Celular</th></Form.Label>
                 <Form.Select aria-label="Nombre Completo">
-                  <option >Seleccione telefono</option>
+                  <option value="" >Seleccione telefono</option>
                   {usuarios.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.telefono}</option>
                   ))}
@@ -538,22 +455,25 @@ export default function Reportescompu() {
                   required />
               </Form.Group>
 
-              <Form.Group as={Col}>
+
+              <Form.Group as={Col} >
                 <Form.Label><th>Modelo</th></Form.Label>
-                <Form.Control type="text" placeholder="Modelo"
-                  id="modelo"
+                <Form.Control type="text" placeholder="Marca" id="modelo"
                   name="modelo"
-                  autoComplete="extension"
+                  autoComplete="modelo"
                   value={formData.modelo}
                   onChange={handleInputChange}
                   required />
               </Form.Group>
 
+
+
               <Form.Group as={Col} >
                 <Form.Label><th>Serial de la parte</th></Form.Label>
-                <Form.Control type="text" placeholder="Serial de la parte"                  id="extension"
-                  name="extension"
-                  autoComplete="extension"
+                <Form.Control type="text" placeholder="Serial de la parte"
+                  id="serial_parte"
+                  name="serial_parte"
+                  autoComplete="serial_parte"
                   value={formData.serial_parte}
                   onChange={handleInputChange}
                   required />
@@ -561,9 +481,10 @@ export default function Reportescompu() {
 
               <Form.Group as={Col} >
                 <Form.Label><th>Fecha de instalacion</th></Form.Label>
-                <Form.Control type="text" placeholder="Fecha de instalacion"                  id="extension"
-                  name="extension"
-                  autoComplete="extension"
+                <Form.Control type="text" placeholder="Fecha de instalacion"
+                  id="fecha_instalacion"
+                  name="fecha_instalacion"
+                  autoComplete="fecha_instalacion"
                   value={formData.fecha_instalacion}
                   onChange={handleInputChange}
                   required />
@@ -573,12 +494,22 @@ export default function Reportescompu() {
               <th className="mb-3">Datos de la parte defectuosa</th>
               <Form.Group as={Col} >
                 <Form.Label><th>Tipo de parte</th></Form.Label>
-                <Form.Control type="text" placeholder="Tipo de parte" />
+                <Form.Select aria-label="tipo_parte">
+                  <option value="" >Seleccione memoria ram</option>
+                  {computadoress.map(usuario => (
+                    <option key={usuario.id} value={usuario.id}>{usuario.memoria_ram}</option>
+                  ))}
+                </Form.Select>
               </Form.Group>
 
               <Form.Group as={Col} >
-                <Form.Label><th>Serial de parte</th></Form.Label>
-                <Form.Control type="text" placeholder="Serial de parte" />
+                <Form.Label><th>Tipo de parte</th></Form.Label>
+                <Form.Select aria-label="tipo_parte">
+                  <option value="" >Seleccione disco duro</option>
+                  {computadoress.map(usuario => (
+                    <option key={usuario.id} value={usuario.id}>{usuario.disco_duro}</option>
+                  ))}
+                </Form.Select>
               </Form.Group>
             </Row>
             <Row className="mb-3">
@@ -586,19 +517,35 @@ export default function Reportescompu() {
 
               <Form.Group as={Col} >
                 <Form.Label><th>Tipo de parte</th></Form.Label>
-                <Form.Control type="text" placeholder="Tipo de parte" />
+                <Form.Select aria-label="tipo_parte">
+                  <option value="" >Seleccione disco duro</option>
+                  {bajas.map(usuario => (
+                    <option key={usuario.id} value={usuario.id}>{usuario.tipo_parte}</option>
+                  ))}
+                </Form.Select>
               </Form.Group>
 
               <Form.Group as={Col} >
                 <Form.Label><th>Serial de parte</th></Form.Label>
-                <Form.Control type="text" placeholder="Serial de parte" />
+                <Form.Select aria-label="tipo_parte">
+                  <option value="" >Seleccione serial</option>
+                  {bajas.map(usuario => (
+                    <option key={usuario.id} value={usuario.id}>{usuario.serial_parte}</option>
+                  ))}
+                </Form.Select>
               </Form.Group>
 
             </Row>
             <Row className="mb-3">
               <Form.Group className="mb-3" >
                 <Form.Label><th>Diagnostico de elemento</th></Form.Label>
-                <Form.Control as="textarea" rows={3} />
+                <Form.Control type="text" placeholder="Escriba su diagnostico"
+                  id="diagnostico"
+                  name="diagnostico"
+                  autoComplete="diagnostico"
+                  value={formData.diagnostico}
+                  onChange={handleInputChange}
+                  required />
               </Form.Group>
             </Row>
 
@@ -606,13 +553,24 @@ export default function Reportescompu() {
 
               <Form.Group as={Col} >
                 <Form.Label><th></th></Form.Label>
-                <Form.Control type="text" placeholder="Activos Fijos" />
+                <Form.Control type="text" placeholder="Activos fijos"
+                  id="activos_fijos"
+                  name="activos_fijos"
+                  autoComplete="activos_fijos"
+                  value={formData.activos_fijos}
+                  onChange={handleInputChange}
+                  required />
                 <th>Activos Fijos</th>
               </Form.Group>
 
               <Form.Group as={Col} >
                 <Form.Label></Form.Label>
-                <Form.Control type="text" placeholder="Coordinador de soporte" />
+                <Form.Select aria-label="coordinador">
+                  <option value="">Selecciona un usuario</option>
+                  {usuarios.map(usuario => (
+                    <option key={usuario.id} value={usuario.id}>{usuario.nickname}</option>
+                  ))}
+                </Form.Select>
                 <th>Coordinador de soporte</th>
               </Form.Group>
             </Row>
