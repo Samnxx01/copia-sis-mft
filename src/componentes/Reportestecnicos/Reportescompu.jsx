@@ -10,22 +10,51 @@ export default function Reportescompu() {
   const [formData, setFormData] = useState({
     fecha: '',
     numero_caso: '',
-    computadores: '',
-    impresoras: '',
-    registUros: '',
+    computadores:{
+      id: '',
+      serial:'',
+      mac:'',
+      nombre_asignado:'',
+      cedula:'', 
+      disco_duro:'',
+      memoria_ram:''
+    },
+    impresoras:{
+      id:'',
+      serial:'',
+      mac:''
+    },
+    registUros:{
+      nickname:'',
+      correo:'',
+      telefono:'',
+      extension:''
+    },
     tipo_equipo: '',
     marca: '',
     modelo: '',
     serial_parte: '',
-    fecha_instalacion: '',
+    fecha_instalacion: '',  
     extension: '',
     correo_electronico: '',
     area: '',
-    bajas: '',
+    bajas:{
+      id:'',
+      serial_parte:'',
+      tipo_parte:''
+    },
     equipo_garantia: '',
     activos_fijos: '',
     diagnostico: '',
   });
+
+  const idCompu = formData.computadores.id
+  const serialCom = formData.computadores.serial
+  const macCompu = formData.computadores.mac
+  const nombre_asigandoPc = formData.computadores.nombre_asignado
+  const cedulaCompu = formData.computadores.cedula
+  const discoCompu = formData.computadores.disco_duro
+  const memoriaPc = formData.computadores.memoria_ram
 
   const [usuarios, setUsuarios] = useState([]);
   const [computadoress, setComputadoresss] = useState([]);
