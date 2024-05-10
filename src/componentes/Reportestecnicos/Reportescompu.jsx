@@ -56,6 +56,11 @@ export default function Reportescompu() {
   const discoCompu = formData.computadores.disco_duro
   const memoriaPc = formData.computadores.memoria_ram
 
+  const idImpre = formData.impresoras.id
+  const serialImpre = formData.impresoras.serial
+  const macImpre = formData.impresoras.mac
+
+
   const [usuarios, setUsuarios] = useState([]);
   const [computadoress, setComputadoresss] = useState([]);
   const [bajas, setBajas] = useState([]);
