@@ -10,38 +10,37 @@ export default function Reportescompu() {
   const [formData, setFormData] = useState({
     fecha: '',
     numero_caso: '',
-    computadores:{
+    computadores: {
+      serial: '',
+      mac: '',
+      nombre_asignado: '',
+      cedula: '',
+      disco_duro: '',
+      memoria_ram: ''
+    },
+    impresoras: {
       id: '',
-      serial:'',
-      mac:'',
-      nombre_asignado:'',
-      cedula:'', 
-      disco_duro:'',
-      memoria_ram:''
+      serial: '',
+      mac: ''
     },
-    impresoras:{
-      id:'',
-      serial:'',
-      mac:''
-    },
-    registUros:{
-      nickname:'',
-      correo:'',
-      telefono:'',
-      extension:''
+    registUros: {
+      nickname: '',
+      correo: '',
+      telefono: '',
+      extension: ''
     },
     tipo_equipo: '',
     marca: '',
     modelo: '',
     serial_parte: '',
-    fecha_instalacion: '',  
+    fecha_instalacion: '',
     extension: '',
     correo_electronico: '',
     area: '',
-    bajas:{
-      id:'',
-      serial_parte:'',
-      tipo_parte:''
+    bajas: {
+      id: '',
+      serial_parte: '',
+      tipo_parte: ''
     },
     equipo_garantia: '',
     activos_fijos: '',
@@ -61,6 +60,13 @@ export default function Reportescompu() {
   const macImpre = formData.impresoras.mac
 
 
+  const idUsuario = formData.registUros.id
+  const nicknameUsu = formData.registUros.nickname
+  const correoUsu = formData.registUros.correo
+  const telefonoUsu = formData.registUros.telefono
+  const extensionUsu = formData.registUros.extension
+
+
   const [usuarios, setUsuarios] = useState([]);
   const [computadoress, setComputadoresss] = useState([]);
   const [bajas, setBajas] = useState([]);
@@ -78,6 +84,66 @@ export default function Reportescompu() {
   };
 
 
+  const handleMarcaChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'marca') {
+      // Determine the type of device based on some criteria
+      const tipo = value === 'Impresora' ? 'Impresora' : 'Computador';
+
+      // Update the form data based on the type of device
+      const nombreDispositivo = tipo === 'Impresora' ? 'impresoras' : 'computadores';
+
+      setFormData(prevData => ({
+        ...prevData,
+        [nombreDispositivo]: {
+          ...prevData[nombreDispositivo],
+          marca: value // Update the serial field here
+        }
+      }));
+    }
+  };
+  const handleSerialChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'serial') {
+      // Determine the type of device based on some criteria
+      const tipo = value === 'Impresora' ? 'Impresora' : 'Computador';
+
+      // Update the form data based on the type of device
+      const nombreDispositivo = tipo === 'Impresora' ? 'impresoras' : 'computadores';
+
+      setFormData(prevData => ({
+        ...prevData,
+        [nombreDispositivo]: {
+          ...prevData[nombreDispositivo],
+          serial: value // Update the serial field here
+        }
+      }));
+    }
+  };
+    const handleMacChange = (e) => {
+      const { name, value } = e.target;
+
+      if (name === 'mac') {
+        // Determine the type of device based on some criteria
+        const tipo = value === 'Impresora' ? 'Impresora' : 'Computador';
+
+        // Update the form data based on the type of device
+        const nombreDispositivo = tipo === 'Impresora' ? 'impresoras' : 'computadores';
+
+        setFormData(prevData => ({
+          ...prevData,
+          [nombreDispositivo]: {
+            ...prevData[nombreDispositivo],
+            mac: value // Update the serial field here
+          }
+        }));
+      }
+    };
+
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,9 +159,11 @@ export default function Reportescompu() {
           ...formData,
         })
       });
+      console.log(formData)
 
       if (response.ok) {
         alert('¡Registro exitoso!');
+        
         // Redirigir a la página de inicio de sesión
       } else {
         console.error('datos incorrectos');
@@ -261,7 +329,7 @@ export default function Reportescompu() {
               <th className="mb-3">Datos del usuario</th>
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Nombre Completo</th></Form.Label>
-                <Form.Select aria-label="computadores" name="computadores" value={data.nombre_asignado} onChange={handleInputChange}>
+                <Form.Select aria-label="computadores" name="computadores" value={nombre_asigandoPc} onChange={(e) => setFormData({ ...formData, computadores: { ...formData.computadores, nombre_asignado: e.target.value } })}>
                   <option>Seleccione usuario</option>
                   {computadoress.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.nombre_asignado}</option>
@@ -269,9 +337,22 @@ export default function Reportescompu() {
                 </Form.Select>
               </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridPassword">
+              <Form.Group as={Col} >
                 <Form.Label><th>Cedula</th></Form.Label>
-                <Form.Select aria-label="computadores" name="computadores" value={data.cedula} onChange={handleInputChange}>
+                <Form.Select
+                  aria-label="computadores"
+                  name="computadores"
+                  value={cedulaCompu}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      computadores: {
+                        ...formData.computadores,
+                        cedula: e.target.value // Aquí actualizas la cédula
+                      }
+                    })
+                  }
+                >
                   <option>Seleccione cedula</option>
                   {computadoress.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.cedula}</option>
@@ -403,7 +484,7 @@ export default function Reportescompu() {
               </Form.Group>
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Marca</th></Form.Label>
-                <Form.Select aria-label="marca" name="marca" onChange={handleInputChange}>
+                <Form.Select aria-label="marca" name="marca" onChange={(e) => handleMarcaChange(e)}>
                   <option value="">Seleccione una marca</option>
                   {optionsMarca.map(option => (
                     <option key={option.value} value={option.value}>{`${option.label} (${option.type})`}</option>
@@ -413,17 +494,17 @@ export default function Reportescompu() {
 
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Serial</th></Form.Label>
-                <Form.Select aria-label="computadores" name="computadores" value={formData.computadores} onChange={handleInputChange}>
+
+                <Form.Select aria-label="serial" name="serial" onChange={(e) => handleSerialChange(e)}>
                   <option value="">Seleccione un serial</option>
                   {options.map(option => (
                     <option key={option.value} value={option.value}>{`${option.label} (${option.type})`}</option>
                   ))}
                 </Form.Select>
               </Form.Group>
-
               <Form.Group as={Col}>
                 <Form.Label><th>Mac</th></Form.Label>
-                <Form.Select aria-label="Nombre Completo" onChange={handleInputChange}>
+                <Form.Select aria-label="mac" name="mac" onChange={(e) => handleMacChange(e)}>
                   <option value="">Seleccione una mac</option>
                   {optionsMac.map(option => (
                     <option key={option.value} value={option.value}>{`${option.label} (${option.type})`}</option>
@@ -434,7 +515,7 @@ export default function Reportescompu() {
               <Form.Group as={Col} >
                 <Form.Label><th>Equipo de garantia</th></Form.Label>
                 <Form.Select aria-label="equipo_garantia" name="equipo_garantia" value={formData.equipo_garantia}
-                 onChange={handleInputChange}>
+                  onChange={handleInputChange}>
                   <option>Seleccione el area</option>
                   <option value="SI">SI</option>
                   <option value="NO">N/A</option>
@@ -445,7 +526,20 @@ export default function Reportescompu() {
               <th className="mb-3" >Datos del ingeniero</th>
               <Form.Group className="mb-3" as={Col}>
                 <Form.Label><th>Nombre Completo</th></Form.Label>
-                <Form.Select aria-label="Nombre Completo">
+                <Form.Select
+                  aria-label="registUros"
+                  name="registUros"
+                  value={nicknameUsu}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      registUros: {
+                        ...formData.registUros,
+                        nickname: e.target.value // Aquí actualizas la cédula
+                      }
+                    })
+                  }
+                >
                   <option >Selecciona un usuario</option>
                   {usuarios.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.nickname}</option>
@@ -454,7 +548,20 @@ export default function Reportescompu() {
               </Form.Group>
               <Form.Group as={Col} >
                 <Form.Label><th>Correo Electronico</th></Form.Label>
-                <Form.Select aria-label="Cedula">
+                <Form.Select
+                  aria-label="registUros"
+                  name="registUros"
+                  value={correoUsu}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      registUros: {
+                        ...formData.registUros,
+                        correo: e.target.value 
+                      }
+                    })
+                  }
+                >
                   <option value="">Seleccione correo</option>
                   {usuarios.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.correo}</option>
@@ -463,13 +570,31 @@ export default function Reportescompu() {
               </Form.Group>
 
               <Form.Group as={Col} >
-                <Form.Label><th>Telefono/extension</th></Form.Label>
-                <Form.Control type="text" placeholder="Telefono/extension" />
+                <Form.Label><th>Extension</th></Form.Label>
+                <Form.Control type="text" placeholder="Extension"
+                  id="extension"
+                  name="extension"
+                  autoComplete="extension"
+                  value={formData.registUros.telefono}
+                  onChange={handleInputChange}
+                  required />
               </Form.Group>
               <Form.Group className="mb-3" as={Col}>
-
                 <Form.Label><th>Celular</th></Form.Label>
-                <Form.Select aria-label="Nombre Completo">
+                <Form.Select
+                  aria-label="registUros"
+                  name="registUros"
+                  value={telefonoUsu}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      registUros: {
+                        ...formData.registUros,
+                        telefono: e.target.value 
+                      }
+                    })
+                  }
+                >
                   <option value="" >Seleccione telefono</option>
                   {usuarios.map(usuario => (
                     <option key={usuario.id} value={usuario.id}>{usuario.telefono}</option>
