@@ -8,9 +8,7 @@ import UserProvider from './auth/hooks/UseContext'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <UserProvider.Provider>
         <App />
-      </UserProvider.Provider>
     </BrowserRouter>
   </React.StrictMode>
 )

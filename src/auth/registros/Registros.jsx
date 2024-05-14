@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useNavigate } from 'react-router-dom';
+import RegistroLogo from '../../../public/img/Uros.jpg'
 
 export default function Registros() {
   const navigate = useNavigate();
@@ -66,10 +67,10 @@ const enviarMenu = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Registros</title>
       </head>
-      <body>
-      <Container className="d-flex justify-content-center align-items-center h-100"> {/* Utiliza clases de Bootstrap para centrar vertical y horizontalmente */}
-      <Row>
-        <Col>
+      <body  style={{backgroundImage:`url(${RegistroLogo})`,height: "100vh", minHeight:'100%' ,backgroundSize:'cover', backgroundPosition:'top', margin:'0', padding:'0' }}>
+      <Container className="d-flex justify-content-center align-items-center"> {/* Utiliza clases de Bootstrap para centrar vertical y horizontalmente */}
+      <Row style={{display:'flex', alignContent:'center', marginTop:'40px', }}  >
+        <Col >
         
           <Form className="login-form"> {/* Agrega una clase para aplicar estilos personalizados */}
           <Form.Text className="text">Registrarse</Form.Text>
@@ -164,7 +165,7 @@ const enviarMenu = () => {
             </Button>
           </Form>
         </Col>
-        <Button style={{ marginRight: '50px' }} variant="info" onClick={enviarMenu}> Regresar al login</Button>
+        
       </Row>
       
     </Container>

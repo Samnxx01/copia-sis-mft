@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import './Login.css'; // Importa tu archivo CSS personalizado}
 import { io } from 'socket.io-client';
 import userContext from '../hooks/UseContext';
+import LogoImg from '../../../public/img/clinicauros.jpg'
 
 
 //nopi , usecontext
@@ -75,8 +76,10 @@ export default function Login() {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>Login</title>
         </head>
-        <body style={{ backgroundColor: 'green', height: "100vh", minHeight:'100%' ,backgroundSize:'cover', margin:'0', padding:'0' }}>
-        <h1 style={{ textAlign: 'center' }}>Bienvenidos al departamento de  sistemas</h1>
+        
+        <body style={{backgroundColor: 'green', backgroundImage:`url(${LogoImg})`, height: "100vh", minHeight:'100%' ,backgroundSize:'cover', margin:'0', padding:'0' }}>
+          
+        <h1 style={{ textAlign: 'center', fontSize:'100px' }}>Departamento de sistemas</h1>
           <Container className="d-flex justify-content-center align-items-center" style={{ justifyContent: 'center' }}> {/* Utiliza clases de Bootstrap para centrar vertical y horizontalmente */}
             <Row style={{display:'flex', justifyContent:'center'}} >
                 <Form  className="login-form" style={{ borderRadius:'10px',width: '250px',  display: 'block',  textAlign: 'center', marginTop: '100px' }}> {/* Agrega una clase para aplicar estilos personalizados */}
@@ -120,7 +123,6 @@ export default function Login() {
                     Ingresar
                   </Button>
                 </Form>
-             
             </Row>
           </Container>
 
