@@ -22,9 +22,9 @@ function Narvbar() {
 
   return (
     <>
-    <Navbar expand="lg-expand" className="bg-body-tertiary">
+    <Navbar  expand="lg-expand" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="/Home">SIS-MFT</Navbar.Brand>
+        <Navbar.Brand  href="/Home">SIS-MFT</Navbar.Brand>
             <Button style={{fontSize:'20px'}} className='bi bi-box-arrow-left' onClick={() =>{
               enviarMenu()
               cerrarSesion()

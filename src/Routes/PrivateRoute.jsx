@@ -28,12 +28,8 @@ export default function PrivateRoute() {
       <Route path="/impresoras" element={<Impresoras />} />
       <Route path="/reportes" element={<Reportes />} />
       <Route path="/computadores" element={<Computadores />} />
-      {/* Protected route for Coordinadors */}
-      {esCoordinador && <Route path="/prueba" element={<Table />} />}
+      <Route path="/prueba" element={<Table />} />
 
-      {/* Protected route for Tecnicos */}
-      {esTecnico && <Route path="/prueba-tecnico" element={<Table />} />}
-      {/* Asegúrate de tener una ruta predeterminada o de redireccionar si no hay coincidencias */}
       <Route path="*" element={<Navigate to="/Home" />} />
     </Routes>
   );

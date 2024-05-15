@@ -1,41 +1,63 @@
 
 import { DataGrid } from '@mui/x-data-grid';
 import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
 import { useState, useEffect, useRef } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { useReactToPrint } from 'react-to-print'
-import {jsPDF} from 'jspdf'
+import { jsPDF } from 'jspdf'
 import Narvbar from '../Narvbar/Narvbar';
 import 'jspdf-autotable';
 
 
+
 export default function datable() {
 
+
+  const [computadoressImg, setComputadoresImg] = useState([]);
+  const [computadoress, setComputadores] = useState([]);
   const componentPDF = useRef();
+  const [imagenURLs, setImagenURLs] = useState([]);
+  const [imagenFaltas, setImagenFaltas] = useState([]);
+
   const [formData, setFormData] = useState({
-    sedes: '',
-    pisos: '',
-    ip: '',
-    serial: '',
+    fecha: '',
+    sede: '',
     ubicacion: '',
-    mac: '',
+    area: '',
     marca: '',
-    contador: '',
-    fecha: ''
+    nombre_equipo: '',
+    sistema_operativo: '',
+    placa: '',
+    disco_duro: '',
+    memoria_ram: '',
+    serial: '',
+    mac: '',
+    ip: '',
+    usuario: '',
+    clave: '',
+    nombre_asignado: '',
+    cedula: '',
+    dominio: '',
+    fecha_mantenimiento: '',
+    tecnico: '',
+    observaciones: '',
+    img: ''
   });
+
 
 
   const facturarData = {
     sedes: 'torre A',
-    pisos:'Segundo piso',
+    pisos: 'Segundo piso',
     ip: '10.10.14.52',
-    serial:'8CC32834S2',
-    ubicacion:'UCI PEDRIATICA',
-    mac:'10:10:AB:AC:4C:S2',
-    marca:'RICOH',
-    contador:'154854545',
-    fecha:'10/10/2023'
+    serial: '8CC32834S2',
+    ubicacion: 'UCI PEDRIATICA',
+    mac: '10:10:AB:AC:4C:S2',
+    marca: 'RICOH',
+    contador: '154854545',
+    fecha: '10/10/2023'
   }
 
 
@@ -73,32 +95,37 @@ export default function datable() {
   }
   const [selectedRows, setSelectedRows] = useState([]);
 
+
   useEffect(() => {
-    const fetchImpresoras = async () => {
+    const obtenerImagenes = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/inventario/listarimpresoras', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const nuevasImagenes = [];
+        const nuevasFaltas = [];
 
-        const data = await response.json();
+        for (const computadora of computadoress) {
+          const id = computadora._id;
+          const response = await fetch(`http://localhost:8000/api/documentos/img/compus/${id}`);
 
-        // Ensure data has the expected structure and property
-        if (data && data.registrosImpreso) {
-          setImpresoras(data.registrosImpreso);
-        } else {
-          console.error('la api no responde.');
-          // Handle the case where the API data is missing or has an unexpected structure
+          if (response.ok) {
+            const imagenBlob = await response.blob();
+            const url = URL.createObjectURL(imagenBlob);
+            nuevasImagenes.push(url);
+            nuevasFaltas.push(false);
+          } else {
+            nuevasImagenes.push(null);
+            nuevasFaltas.push(true);
+          }
         }
+
+        setImagenURLs(nuevasImagenes);
+        setImagenFaltas(nuevasFaltas);
       } catch (error) {
-        console.error('Error fetching impresoras:', error);
+        console.error('Error al obtener las imágenes:', error);
       }
     };
 
-    fetchImpresoras();
-  }, []);
+    obtenerImagenes();
+  }, [computadoress]);
 
   const handleEliminarClick = async (id) => {
 
@@ -131,7 +158,126 @@ export default function datable() {
       alert('Ha ocurrido un error inesperado. Inténtalo de nuevo más tarde.');
     }
   };
+  useEffect(() => {
+    const fetchCompu = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/inventario/listarcompu', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
+        const data = await response.json();
+
+        // Ensure data has the expected structure and property
+        if (data && data.listarCompu) {
+          setComputadores(data.listarCompu);
+        } else {
+          console.error('la api no responde.');
+          // Handle the case where the API data is missing or has an unexpected structure
+        }
+      } catch (error) {
+        console.error('Error fetching impresoras:', error);
+      }
+    };
+
+    fetchCompu();
+  }, []);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
+  };
+  /*
+    useEffect(() => {
+      const fetchArchivoss = async () => {
+        try {
+          const coleccion = ''; // Ejemplo, reemplaza con la colección deseada
+          const id = ''; // Reemplaza con el ID de la imagen
+    
+          const response = await fetch(`http://localhost:8000/api/${coleccion}/${id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+    
+          if (!response.ok) {
+            // Manejar error de la API (ej: status code 400, 404, etc.)
+            const errorData = await response.json();
+            console.error('Error fetching imagenes:', errorData.msg);
+            return;
+          }
+    
+          const data = await response.blob(); // Obtener la imagen como blob (opcional)
+    
+          // Puedes manejar la imagen como un archivo o parsearla como JSON si es la estructura esperada
+          if (data.type.startsWith('image/')) {
+            const url = window.URL.createObjectURL(data);
+            setImagenes([{ url, id }]); // Ejemplo: Actualizar estado con un array de objetos con url e id
+          } else {
+            const parsedData = await data.text(); // Parsear como JSON si es necesario
+            setImagenes(parsedData); // Actualizar estado con la información recibida
+          }
+    
+        } catch (error) {
+          console.error('Error fetching imagenes:', error);
+        }
+      };
+    
+      fetchArchivoss();
+    }, []);*/
+  const handleSubmitImg = async (e, id) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:8000/api/inventario/modificarImpresoras/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'codificado': ''
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert('¡Modificación exitosa!');
+        Navigate('/impresoras'); // Redirigir a la página de impresoras
+      } else {
+        console.error('Datos incorrectos');
+        alert('Error en la modificación');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchImpresoras = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/inventario/listarimpresoras', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+
+        // Ensure data has the expected structure and property
+        if (data && data.registrosImpreso) {
+          setImpresoras(data.registrosImpreso);
+        } else {
+          console.error('la api no responde.');
+          // Handle the case where the API data is missing or has an unexpected structure
+        }
+      } catch (error) {
+        console.error('Error fetching impresoras:', error);
+      }
+    };
+
+    fetchImpresoras();
+  }, []);
   //Logica para modificar impresora
   const handleSubmitModificar = async (e, id) => {
     e.preventDefault();
@@ -207,40 +353,40 @@ export default function datable() {
     onAfterPrint: () => alert("Guardado pdf")
   })
 
-  const generatePDF =()=>{
+  const generatePDF = () => {
     const doc = new jsPDF()
-   
-    
-    
-   /* impresoras.forEach((impresora, index) => {
-      y += 10; // Incrementar la posición vertical para cada impresora
-      // Agregar los datos de cada impresora al PDF
-      doc.text('Tabla de impresoras', 15,5)
-      doc.text(`Impresora :`, 10, y);
-      doc.text(`Sedes: ${impresora.sedes}`, 10, y + 10);
-      doc.text(`Pisos: ${impresora.pisos}`, 10, y + 20);
-      doc.text(`IP: ${impresora.ip}`, 10, y + 30);
-      doc.text(`Serial: ${impresora.serial}`, 10, y + 40);
-      doc.text(`Ubicacion: ${impresora.ubicacion}`, 10, y + 50);
-      doc.text(`MAC: ${impresora.mac}`, 10, y + 60);
-      doc.text(`Marca: ${impresora.marca}`, 10, y + 70);
-      doc.text(`Contador: ${impresora.contador}`, 10, y + 80);
-      doc.text(`Fecha: ${impresora.fecha}`, 10, y + 90);
-  });*/
+
+
+
+    /* impresoras.forEach((impresora, index) => {
+       y += 10; // Incrementar la posición vertical para cada impresora
+       // Agregar los datos de cada impresora al PDF
+       doc.text('Tabla de impresoras', 15,5)
+       doc.text(`Impresora :`, 10, y);
+       doc.text(`Sedes: ${impresora.sedes}`, 10, y + 10);
+       doc.text(`Pisos: ${impresora.pisos}`, 10, y + 20);
+       doc.text(`IP: ${impresora.ip}`, 10, y + 30);
+       doc.text(`Serial: ${impresora.serial}`, 10, y + 40);
+       doc.text(`Ubicacion: ${impresora.ubicacion}`, 10, y + 50);
+       doc.text(`MAC: ${impresora.mac}`, 10, y + 60);
+       doc.text(`Marca: ${impresora.marca}`, 10, y + 70);
+       doc.text(`Contador: ${impresora.contador}`, 10, y + 80);
+       doc.text(`Fecha: ${impresora.fecha}`, 10, y + 90);
+   });*/
     //crear tablas 
-    
+
 
 
     doc.autoTable({
       head: [['Sedes', 'Pisos', 'IP', 'Serial', 'Ubicacion', 'MAC', 'Marca', 'Contador', 'Fecha']],
       body: rows.map(impresora => [impresora.sedes, impresora.pisos, impresora.ip, impresora.serial, impresora.ubicacion, impresora.mac, impresora.marca, impresora.contador, impresora.fecha]),
       styles: {
-        tableWidth: 'wrap', 
-        tableHeight: 'auto' 
-        
-    }
+        tableWidth: 'wrap',
+        tableHeight: 'auto'
+
+      }
     });
-  
+
     //guardar el pdf un nombre especifico 
     doc.save(`Tabla de impresoras.pdf`)
 
@@ -248,6 +394,31 @@ export default function datable() {
   return (
 
     <>
+
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Imagen</th>
+          </tr>
+        </thead>
+        <tbody>
+          {imagenURLs.map((url, index) => (
+            <tr key={index}>
+              {imagenFaltas[index] ? (
+                <td>La imagen no está disponible</td>
+              ) : (
+                <td><img src={url} alt="Imagen" /></td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+
+      <Form.Group controlId="formFileLg" className="mb-3">
+        <Form.Label>Aqui puede subir imagen</Form.Label>
+        <Form.Control onChange={handleFileChange} type="file" size="lg" />
+      </Form.Group>
+
       <html lang="en">
         <head>
           <meta charset="UTF-8" />
@@ -255,7 +426,7 @@ export default function datable() {
           <title>Prueba</title>
         </head>
         <body>
-          <Narvbar/>
+          <Narvbar />
           <div style={{ height: 400, width: '100%' }}>
             <DataGrid
               ref={componentPDF}
@@ -385,19 +556,19 @@ export default function datable() {
               </Button>
             </Modal.Footer>
           </Modal>
-          <Button variant="success" style={{marginLeft:'4px'}} onClick={generarPDF}> PDF </Button>
+          <Button variant="success" style={{ marginLeft: '4px' }} onClick={generarPDF}> PDF </Button>
           <div>
             <div>
               <div>
-               <h1>Prueba</h1> 
-               <h4>Aqui va el logo</h4>
-               <p>Numero de caso: {facturarData.fecha}</p>
-               <p>Sedes: {facturarData.sedes}</p>
-               <p>ip: {facturarData.ip}</p>
-               <p>serial: {facturarData.serial}</p>
-               <p>Mac: {facturarData.mac}</p>
-               <p>Narca: {facturarData.marca}</p>
-               <p>Contador: {facturarData.contador}</p>
+                <h1>Prueba</h1>
+                <h4>Aqui va el logo</h4>
+                <p>Numero de caso: {facturarData.fecha}</p>
+                <p>Sedes: {facturarData.sedes}</p>
+                <p>ip: {facturarData.ip}</p>
+                <p>serial: {facturarData.serial}</p>
+                <p>Mac: {facturarData.mac}</p>
+                <p>Narca: {facturarData.marca}</p>
+                <p>Contador: {facturarData.contador}</p>
               </div>
               <Button variant="success" onClick={generatePDF}>Generar PDF </Button>
             </div>

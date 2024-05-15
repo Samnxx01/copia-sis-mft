@@ -344,6 +344,7 @@ export default function Computadores() {
     fecha_mantenimiento: regis.fecha_mantenimiento,
     tecnico: regis.tecnico,
     observaciones: regis.observaciones,
+    img: regis.img,
   }));
 
   return (
