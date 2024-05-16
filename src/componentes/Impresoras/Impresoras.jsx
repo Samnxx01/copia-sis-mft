@@ -9,7 +9,8 @@ import userContext from '../../auth/hooks/UseContext';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
-
+import { jsPDF } from 'jspdf'
+import 'jspdf-autotable';  
 
 
 
@@ -225,22 +226,34 @@ export default function Impresoras() {
   const obtenerImpresoras = async (tipoBusqueda, valorBusqueda) => {
     try {
       let url;
+  
+      // Evaluar el tipo de búsqueda y construir la URL correspondiente
       if (tipoBusqueda === 'serial') {
+        url = `http://localhost:8000/api/inventario/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'mac') {
+        url = `http://localhost:8000/api/inventario/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'ubicacion') {
+        url = `http://localhost:8000/api/inventario/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'ip') {
+        url = `http://localhost:8000/api/inventario/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'sedes') {
+        url = `http://localhost:8000/api/inventario/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'pisos') {
         url = `http://localhost:8000/api/inventario/listarID/${valorBusqueda}`;
       } else {
         console.error('Tipo de búsqueda inválido:', tipoBusqueda);
         return; // Manejar el tipo de búsqueda inválido
       }
-
+  
       const respuesta = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       });
-
+  
       const datos = await respuesta.json();
-
+  
       if (datos && datos.verificarPro) {
         setImpresoras([datos.verificarPro]); // Suponiendo un único resultado
       } else {
@@ -251,37 +264,7 @@ export default function Impresoras() {
       console.error('Error al obtener impresoras:', error);
     }
   };
-  const obtenerImpresorasIP = async (tipoBusqueda, valorBusqueda) => {
 
-    try {
-      let url;
-
-      if (tipoBusqueda === 'ip') {
-        url = `http://localhost:8000/api/inventario/listarIP/${valorBusqueda}`;
-      } else {
-        console.error('Tipo de búsqueda inválido:', tipoBusqueda);
-        return; // Manejar el tipo de búsqueda inválido
-      }
-
-      const respuesta = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const datos = await respuesta.json();
-
-      if (datos && datos.verificarPro) {
-        setImpresoras([datos.verificarPro]); // Suponiendo un único resultado
-      } else {
-        console.error('API no responde o registro no encontrado.');
-        setImpresoras([]); // Limpiar datos si no hay resultados
-      }
-    } catch (error) {
-      console.error('Error al obtener impresoras:', error);
-    }
-  };
 
   const inputRefIP = useRef(null);
   const inputRefSerial = useRef(null);
@@ -336,6 +319,45 @@ export default function Impresoras() {
       fecha: impresora.fecha,
     }));
 
+    const generatePDF = () => {
+      const doc = new jsPDF()
+  
+  
+  
+      /* impresoras.forEach((impresora, index) => {
+         y += 10; // Incrementar la posición vertical para cada impresora
+         // Agregar los datos de cada impresora al PDF
+         doc.text('Tabla de impresoras', 15,5)
+         doc.text(`Impresora :`, 10, y);
+         doc.text(`Sedes: ${impresora.sedes}`, 10, y + 10);
+         doc.text(`Pisos: ${impresora.pisos}`, 10, y + 20);
+         doc.text(`IP: ${impresora.ip}`, 10, y + 30);
+         doc.text(`Serial: ${impresora.serial}`, 10, y + 40);
+         doc.text(`Ubicacion: ${impresora.ubicacion}`, 10, y + 50);
+         doc.text(`MAC: ${impresora.mac}`, 10, y + 60);
+         doc.text(`Marca: ${impresora.marca}`, 10, y + 70);
+         doc.text(`Contador: ${impresora.contador}`, 10, y + 80);
+         doc.text(`Fecha: ${impresora.fecha}`, 10, y + 90);
+     });*/
+      //crear tablas 
+  
+  
+  
+      doc.autoTable({
+        head: [['Sedes', 'Pisos', 'IP', 'Serial', 'Ubicacion', 'MAC', 'Marca', 'Contador', 'Fecha']],
+        body: rows.map(impresora => [impresora.sedes, impresora.pisos, impresora.ip, impresora.serial, impresora.ubicacion, impresora.mac, impresora.marca, impresora.contador, impresora.fecha]),
+        styles: {
+          tableWidth: 'wrap',
+          tableHeight: 'auto'
+  
+        }
+      });
+  
+      //guardar el pdf un nombre especifico 
+      doc.save(`Tabla de impresoras.pdf`)
+  
+    }
+
   return (
     <>
       <html lang="en">
@@ -347,6 +369,7 @@ export default function Impresoras() {
         <body>
           <Narvbar />
           <Button style={{ marginRight: '20px' }} variant="dark" onClick={enviarMenu}>Menu principal</Button>
+          <Button variant="success"  style={{ marginRight: '20px' }} onClick={generatePDF}>Generar PDF </Button>
           <Button style={{ marginRight: '20px' }} variant="success" onClick={handleShowID}>
             Listar por SERIAL
           </Button>
@@ -365,22 +388,6 @@ export default function Impresoras() {
                     value={serial}
                     onChange={(e) => setSerial(e.target.value)} />
                   <Button variant="success" ref={inputRefSerial} onKeyDown={handleKeyPressSerial} onClick={() => obtenerImpresoras('serial', serial)}>Buscar</Button>
-                </Form.Group>
-              </Form>
-            </Modal.Body>
-            <Modal.Header closeButton>
-              <Modal.Title>Buscar por IP</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                  <Form.Label><th>Ingrese el serial</th></Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="ip"
-                    value={ip}
-                    onChange={(e) => setIp(e.target.value)} />
-                  <Button variant="success" ref={inputRefIP} onKeyDown={handleKeyPressIP} onClick={() => obtenerImpresorasIP('ip', ip)}>Buscar</Button>
                 </Form.Group>
               </Form>
             </Modal.Body>

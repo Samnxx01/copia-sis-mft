@@ -7,19 +7,12 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { useReactToPrint } from 'react-to-print'
 import { jsPDF } from 'jspdf'
-import Narvbar from '../Narvbar/Narvbar';
 import 'jspdf-autotable';
-
+import Narvbar from '../Narvbar/Narvbar';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function datable() {
-
-
-  const [computadoressImg, setComputadoresImg] = useState([]);
-  const [computadoress, setComputadores] = useState([]);
-  const componentPDF = useRef();
-  const [imagenURLs, setImagenURLs] = useState([]);
-  const [imagenFaltas, setImagenFaltas] = useState([]);
 
   const [formData, setFormData] = useState({
     fecha: '',
@@ -46,8 +39,80 @@ export default function datable() {
     img: ''
   });
 
+  const navigate = useNavigate();
 
 
+
+  const [computadoressImg, setComputadoresImg] = useState([]);
+  const [computadoress, setComputadores] = useState([]);
+  const componentPDF = useRef();
+  const [imagenURLs, setImagenURLs] = useState([]);
+  const [imagenFaltas, setImagenFaltas] = useState([]);
+
+
+
+  const [archivo, setArchivo] = useState(null);
+
+  const handleFileChange = (event) => {
+    setArchivo(event.target.files[0]); // Capturar el archivo seleccionado por el usuario
+  };
+
+  const handleSubmitIMG = async (event) => {
+    event.preventDefault();
+
+    if (!archivo) {
+      console.error('No hay archivo para subir');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('archivo', archivo); // Agregar el archivo al FormData
+
+      // Enviar el FormData al servidor
+      const response = await fetch('http://localhost:8000/api/documentos/subirarchivosDB', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al subir el archivo');
+      }
+      alert('Subido el archivo')
+      const data = await response.json();
+      console.log('Respuesta del servidor:', data);
+    } catch (error) {
+      console.error('Error al subir el archivo:', error);
+    }
+  };
+ /* const handleSubmitCompu = async (event) => {
+    event.preventDefault();
+
+    if (!archivo) {
+      console.error('No hay archivo para subir');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('archivo', archivo); // Agregar el archivo al FormData
+
+      // Enviar el FormData al servidor
+      const response = await fetch(`http://localhost:8000/api/documentos/compus/${id}`, {
+        method: 'PUT',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al subir el archivo');
+      }
+      alert('Subido el archivo')
+      const data = await response.json();
+      console.log('Respuesta del servidor:', data);
+    } catch (error) {
+      console.error('Error al subir el archivo:', error);
+    }
+  };*/
   const facturarData = {
     sedes: 'torre A',
     pisos: 'Segundo piso',
@@ -73,6 +138,7 @@ export default function datable() {
   const handleCerrar = () => setEliminar(false);
   const [seleccionaModificacion, setSeleccionModificacion] = useState({})
   const [impresoras, setImpresoras] = useState([]);
+  const [archivosDB, setArchivosDB] = useState([]);
   const [idEliminar, setIdEliminar] = useState('');
   const [idModi, setIdModi] = useState('');
   const [showEliminar, setEliminar] = useState(false);
@@ -126,6 +192,36 @@ export default function datable() {
 
     obtenerImagenes();
   }, [computadoress]);
+
+  /* useEffect(() => {
+     const obtenerImagenes = async () => {
+       try {
+         const nuevasImagenes = [];
+         const nuevasFaltas = [];
+ 
+         for (const archivo of archivosDB) {
+           const id = archivo._id;
+           const response = await fetch(`http://localhost:8000/api/documentos/img/ArchivosSubidos/${id}`);
+ 
+           if (response.ok) {
+             const imagenBlob = await response.blob();
+             const url = URL.createObjectURL(imagenBlob);
+             nuevasImagenes.push(url);
+             nuevasFaltas.push(false);
+           } else {
+             nuevasImagenes.push(null);
+             nuevasFaltas.push(true);
+           }
+         }
+         setImagenURLs(nuevasImagenes); 
+         setImagenFaltas(nuevasFaltas);
+       } catch (error) {
+         console.error('Error al obtener las imágenes:', error);
+       }
+     };
+ 
+     obtenerImagenes();
+   }, [archivosDB]);*/
 
   const handleEliminarClick = async (id) => {
 
@@ -185,10 +281,6 @@ export default function datable() {
     fetchCompu();
   }, []);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
-  };
   /*
     useEffect(() => {
       const fetchArchivoss = async () => {
@@ -228,30 +320,41 @@ export default function datable() {
     
       fetchArchivoss();
     }, []);*/
-  const handleSubmitImg = async (e, id) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(`http://localhost:8000/api/inventario/modificarImpresoras/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'codificado': ''
-        },
-        body: JSON.stringify(formData),
-      });
 
-      if (response.ok) {
-        alert('¡Modificación exitosa!');
-        Navigate('/impresoras'); // Redirigir a la página de impresoras
-      } else {
-        console.error('Datos incorrectos');
-        alert('Error en la modificación');
+    const handleFileChangeIMG = (event) => {
+      setArchivo(event.target.files[0]); // Capturar el archivo seleccionado por el usuario
+    };
+  
+    const handleSubmit = async (event,id) => {
+      event.preventDefault();
+  
+      if (!archivo) {
+        console.error('No hay archivo para subir');
+        return;
       }
-    } catch (error) {
-      console.error('Error en la solicitud:', error);
-    }
-  };
-
+  
+      try {
+        const formData = new FormData();
+        formData.append('archivo', archivo); // Agregar el archivo al FormData
+  
+        // Enviar el FormData al servidor
+        const response = await fetch(`http://localhost:8000/api/documentos/compus/${id}`, {
+          method: 'PUT',
+          body: formData,
+        });
+  
+        if (!response.ok) {
+          throw new Error('Error al subir el archivo');
+        }
+  
+        const data = await response.json();
+        console.log('Respuesta del servidor:', data);
+        // Realizar acciones adicionales si es necesario
+      } catch (error) {
+        console.error('Error al subir el archivo:', error);
+      }
+    };
+  
   useEffect(() => {
     const fetchImpresoras = async () => {
       try {
@@ -391,10 +494,13 @@ export default function datable() {
     doc.save(`Tabla de impresoras.pdf`)
 
   }
+  const enviarMenu = () => {
+    navigate('/Home');
+  };
   return (
 
     <>
-
+      <Button style={{ marginRight: '20px' }} variant="dark" onClick={enviarMenu}>Menu principal</Button>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -414,10 +520,22 @@ export default function datable() {
         </tbody>
       </Table>
 
+      <Form onSubmit={handleSubmitIMG}>
+        <Form.Group controlId="formFileLg" className="mb-3">
+          <Form.Label>Aquí puede subir imagen</Form.Label>
+          <Form.Control onChange={handleFileChange} type="file" size="lg" />
+        </Form.Group>
+        <button type="submit">Subir Archivo</button>
+      </Form>
+      <Form onSubmit={handleSubmit}>
       <Form.Group controlId="formFileLg" className="mb-3">
-        <Form.Label>Aqui puede subir imagen</Form.Label>
-        <Form.Control onChange={handleFileChange} type="file" size="lg" />
+        <Form.Label>Aquí se puede actualizar</Form.Label>
+        <Form.Control onChange={handleFileChangeIMG} type="file" size="lg" />
       </Form.Group>
+      <Button onClick={(event) => handleSubmit(event, id)}>Subir Imagen</Button>
+    </Form>
+
+
 
       <html lang="en">
         <head>

@@ -9,6 +9,9 @@ import Table from 'react-bootstrap/Table';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
+import { jsPDF } from 'jspdf'
+import 'jspdf-autotable';
+
 
 
 
@@ -40,6 +43,7 @@ export default function Computadores() {
     fecha_mantenimiento: '',
     tecnico: '',
     observaciones: '',
+    img: ''
   });
 
   const [computadoress, setComputadores] = useState([]);
@@ -113,7 +117,27 @@ export default function Computadores() {
   const obtenerComputadores = async (tipoBusqueda, valorBusqueda) => {
     try {
       let url;
+
+      // Evaluar el tipo de búsqueda y construir la URL correspondiente
       if (tipoBusqueda === 'serial') {
+        url = `http://localhost:8000/api/inventario/compu/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'mac') {
+        url = `http://localhost:8000/api/inventario/compu/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'ubicacion') {
+        url = `http://localhost:8000/api/inventario/compu/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'ip') {
+        url = `http://localhost:8000/api/inventario/compu/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'sede') {
+        url = `http://localhost:8000/api/inventario/compu/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'mac') {
+        url = `http://localhost:8000/api/inventario/compu/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'area') {
+        url = `http://localhost:8000/api/inventario/compu/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'placa') {
+        url = `http://localhost:8000/api/inventario/compu/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'marca') {
+        url = `http://localhost:8000/api/inventario/compu/listarID/${valorBusqueda}`;
+      } else if (tipoBusqueda === 'cedula') {
         url = `http://localhost:8000/api/inventario/compu/listarID/${valorBusqueda}`;
       } else {
         console.error('Tipo de búsqueda inválido:', tipoBusqueda);
@@ -129,8 +153,8 @@ export default function Computadores() {
 
       const datos = await respuesta.json();
 
-      if (datos && datos.verificarPro) {
-        setComputadores([datos.verificarPro]); // Suponiendo un único resultado
+      if (datos && datos.compuVeri) {
+        setComputadores([datos.compuVeri]); // Suponiendo un único resultado
       } else {
         console.error('API no responde o registro no encontrado.');
         setComputadores([]); // Limpiar datos si no hay resultados
@@ -139,6 +163,7 @@ export default function Computadores() {
       console.error('Error al obtener impresoras:', error);
     }
   };
+
 
   const obtenerComputadoresIP = async (tipoBusqueda, valorBusqueda) => {
     try {
@@ -269,6 +294,40 @@ export default function Computadores() {
       console.error('Error en la solicitud:', error);
     }
   };
+  const [archivo, setArchivo] = useState(null);
+
+  const handleFileChange = (event) => {
+    setArchivo(event.target.files[0]); // Capturar el archivo seleccionado por el usuario
+  };
+
+  const handleSubmitIMG = async (event) => {
+    event.preventDefault();
+
+    if (!archivo) {
+      console.error('No hay archivo para subir');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('archivo', archivo); // Agregar el archivo al FormData
+
+      // Enviar el FormData al servidor
+      const response = await fetch('http://localhost:8000/api/documentos/subirarchivosDB', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al subir el archivo');
+      }
+      alert('Subido el archivo')
+      const data = await response.json();
+      console.log('Respuesta del servidor:', data);
+    } catch (error) {
+      console.error('Error al subir el archivo:', error);
+    }
+  };
 
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -276,11 +335,6 @@ export default function Computadores() {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
-  };
 
   const enviarMenu = () => {
     navigate('/Home');
@@ -308,6 +362,7 @@ export default function Computadores() {
     { field: 'fecha_mantenimiento', headerName: 'FECHA MANTENIMIENTO', width: 130 },
     { field: 'tecnico', headerName: 'TECNICO', width: 130 },
     { field: 'observaciones', headerName: 'OBSERVACION', width: 130 },
+    { field: 'img', headerName: 'IMG', width: 130 },
     {
       field: 'actions',
       headerName: 'Actions',
@@ -363,7 +418,7 @@ export default function Computadores() {
             Aqui agregas el computador
           </Button>
           <Button variant="success" onClick={handleShowID}>
-            Listar por SERIAL 
+            Listar por SERIAL
           </Button>
 
           <Modal show={showID} onHide={handleCloseID}>
@@ -380,22 +435,6 @@ export default function Computadores() {
                     value={serial}
                     onChange={(e) => setSerial(e.target.value)} />
                   <Button variant="success" ref={inputRefSerial} onKeyDown={handleKeyPressSerial} onClick={() => obtenerComputadores('serial', serial)}>Buscar</Button>
-                </Form.Group>
-              </Form>
-            </Modal.Body>
-            <Modal.Header closeButton>
-              <Modal.Title>Buscar por IP</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                  <Form.Label><th>Ingrese la ip</th></Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="ip"
-                    value={ip}
-                    onChange={(e) => setIp(e.target.value)} />
-                  <Button variant="success" ref={inputRefIP} onKeyDown={handleKeyPressIP} onClick={() => obtenerComputadoresIP('ip', ip)}>Buscar</Button>
                 </Form.Group>
               </Form>
             </Modal.Body>
@@ -617,7 +656,7 @@ export default function Computadores() {
                     required />
                 </Form.Group>
                 <Form.Group controlId="formFile" className="mb-3">
-                  <Form.Label>Default file input example</Form.Label>
+                  <Form.Label>Subir archivo</Form.Label>
                   <Form.Control type="file" />
                 </Form.Group>
               </Form>
