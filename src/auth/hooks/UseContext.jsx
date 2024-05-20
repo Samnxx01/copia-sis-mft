@@ -1,14 +1,9 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState } from 'react';
 
 const userContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
-
-  const validarRol = (rolRequerido) => {
-    // Validación mejorada para mayor seguridad
-    return user && user.rol === rolRequerido && user.isLoggedIn; // Comprueba rol y estado de inicio de sesión
-  };
 
   const addUser = (datos) => {
     setUser(datos);
@@ -20,14 +15,23 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(null));
   };
 
-  console.log(user)
+  const isCoordinator = () => {
+    return user && user.role === 'coordinador';
+  };
+
+  const isTechnician = () => {
+    return user && user.role === 'tecnico';
+  };
+
+  console.log(user);
+  
   const value = {
     user,
     setUser,
     addUser,
     cerrarSesion,
-    esCoordinador: () => validarRol('COORDINADOR'),
-    esTecnico: () => validarRol('TECNICO'),
+    isCoordinator,
+    isTechnician
   };
 
   return (
@@ -38,4 +42,3 @@ export const UserProvider = ({ children }) => {
 };
 
 export default userContext;
-

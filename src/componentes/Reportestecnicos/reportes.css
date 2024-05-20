@@ -1,0 +1,16 @@
+.reporte-formu {
+    padding: 50px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    width: 100em;
+  }
+  
+  .reporte-formu label {
+    font-weight: bold;
+  }
+  
+  .reporte-formu .form-control {
+    margin-bottom: 15px;
+  }
+  

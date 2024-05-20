@@ -21,6 +21,7 @@ export default function Computadores() {
   const navigate = useNavigate();
 
 
+
   const [formData, setFormData] = useState({
     fecha: '',
     sede: '',
@@ -232,39 +233,45 @@ export default function Computadores() {
 
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [e.target.name]: e.target.value,
     });
   };
 
+  const [archivo, setArchivo] = useState(null);
 
-  const handleSubmit = async (e) => {
+  const handleFileChange = (e) => {
+    setArchivo(e.target.files[0]);
+  };
+
+
+const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const id = e.target.id.value;
+    if (!archivo) {
+      console.error('No hay archivo para subir');
+      return;
+    }
+
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
+    }
+    formDataToSend.append('archivo', archivo);
 
     try {
-
       const response = await fetch('http://localhost:8000/api/inventario/guardarComputador', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'codificado': ''
-        },
-        body: JSON.stringify({
-          ...formData,
-          id
-
-        }),
+        body: formDataToSend,
       });
+      console.log(formDataToSend)
 
       if (response.ok) {
         alert('¡Registro exitoso!');
-        Navigate('/Computadores'); // Redirigir a la página de inicio de sesión
+        // Redirigir a la página de computadores
       } else {
-        console.error('datos incorrectos');
+        console.error('Error en el registro');
         alert('Error en el registro');
       }
     } catch (error) {
@@ -294,13 +301,8 @@ export default function Computadores() {
       console.error('Error en la solicitud:', error);
     }
   };
-  const [archivo, setArchivo] = useState(null);
 
-  const handleFileChange = (event) => {
-    setArchivo(event.target.files[0]); // Capturar el archivo seleccionado por el usuario
-  };
-
-  const handleSubmitIMG = async (event) => {
+  /*const handleSubmitIMG = async (event) => {
     event.preventDefault();
 
     if (!archivo) {
@@ -327,7 +329,7 @@ export default function Computadores() {
     } catch (error) {
       console.error('Error al subir el archivo:', error);
     }
-  };
+  };*/
 
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -401,6 +403,44 @@ export default function Computadores() {
     observaciones: regis.observaciones,
     img: regis.img,
   }));
+  const generatePDF = () => {
+    const doc = new jsPDF()
+                                  
+
+
+    /* impresoras.forEach((impresora, index) => {
+       y += 10; // Incrementar la posición vertical para cada impresora
+       // Agregar los datos de cada impresora al PDF
+       doc.text('Tabla de impresoras', 15,5)
+       doc.text(`Impresora :`, 10, y);
+       doc.text(`Sedes: ${impresora.sedes}`, 10, y + 10);
+       doc.text(`Pisos: ${impresora.pisos}`, 10, y + 20);
+       doc.text(`IP: ${impresora.ip}`, 10, y + 30);
+       doc.text(`Serial: ${impresora.serial}`, 10, y + 40);
+       doc.text(`Ubicacion: ${impresora.ubicacion}`, 10, y + 50);
+       doc.text(`MAC: ${impresora.mac}`, 10, y + 60);
+       doc.text(`Marca: ${impresora.marca}`, 10, y + 70);
+       doc.text(`Contador: ${impresora.contador}`, 10, y + 80);
+       doc.text(`Fecha: ${impresora.fecha}`, 10, y + 90);
+   });*/
+    //crear tablas 
+
+
+
+    doc.autoTable({
+      head: [['Fecha','Sedes', 'Ubicacion','Area','Marca','Nombre_equipo','Sistema Operativo','Plca','Disco Duro', 'Memoria Ram','IP', 'Serial', 'Ubicacion', 'MAC', 'Marca', 'Usuario', 'Clave', 'Nombre_asignado', 'Cedula']],
+      body: rows.map(computadores => [computadores.fecha,computadores.sede, computadores.ubicacion, computadores.area,computadores.marca, computadores.nombre_equipo, computadores.sistema_operativo,computadores.placa,computadores.disco_duro,computadores.memoria_ram, computadores.ip, computadores.serial, computadores.mac,computadores.ip,computadores.usuario,computadores.clave, computadores.nombre_asignado, computadores.cedula, computadores.dominio, computadores.fecha_mantenimiento, computadores.tecnico,computadores.observaciones,computadores.img]),
+      styles: {
+        tableWidth: 'wrap',
+        tableHeight: 'auto'
+
+      }
+    });
+
+    //guardar el pdf un nombre especifico 
+    doc.save(`Tabla de impresoras.pdf`)
+
+  }
 
   return (
     <>
@@ -414,6 +454,7 @@ export default function Computadores() {
         <body>
           <Narvbar />
           <Button style={{ marginRight: '20px' }} variant="dark" onClick={enviarMenu}>Menu principal</Button>
+          <Button variant="success"  style={{ marginRight: '20px' }} onClick={generatePDF}>Generar PDF </Button>
           <Button style={{ marginRight: '20px' }} variant="primary" onClick={handleShow}>
             Aqui agregas el computador
           </Button>
@@ -446,7 +487,7 @@ export default function Computadores() {
               <Modal.Title>Quieres ingresar un computador?</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Form>
+              <Form >
                 <Form.Group className="mb-3">
                   <th>Fecha</th>
                   <Form.Control type="text" placeholder="fecha"
@@ -657,7 +698,7 @@ export default function Computadores() {
                 </Form.Group>
                 <Form.Group controlId="formFile" className="mb-3">
                   <Form.Label>Subir archivo</Form.Label>
-                  <Form.Control type="file" />
+                  <Form.Control type="file"  onChange={handleFileChange} />
                 </Form.Group>
               </Form>
             </Modal.Body>

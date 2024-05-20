@@ -51,6 +51,8 @@ export default function datable() {
 
 
 
+
+
   const [archivo, setArchivo] = useState(null);
 
   const handleFileChange = (event) => {
@@ -85,34 +87,34 @@ export default function datable() {
       console.error('Error al subir el archivo:', error);
     }
   };
- /* const handleSubmitCompu = async (event) => {
-    event.preventDefault();
-
-    if (!archivo) {
-      console.error('No hay archivo para subir');
-      return;
-    }
-
-    try {
-      const formData = new FormData();
-      formData.append('archivo', archivo); // Agregar el archivo al FormData
-
-      // Enviar el FormData al servidor
-      const response = await fetch(`http://localhost:8000/api/documentos/compus/${id}`, {
-        method: 'PUT',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al subir el archivo');
-      }
-      alert('Subido el archivo')
-      const data = await response.json();
-      console.log('Respuesta del servidor:', data);
-    } catch (error) {
-      console.error('Error al subir el archivo:', error);
-    }
-  };*/
+  /* const handleSubmitCompu = async (event) => {
+     event.preventDefault();
+ 
+     if (!archivo) {
+       console.error('No hay archivo para subir');
+       return;
+     }
+ 
+     try {
+       const formData = new FormData();
+       formData.append('archivo', archivo); // Agregar el archivo al FormData
+ 
+       // Enviar el FormData al servidor
+       const response = await fetch(`http://localhost:8000/api/documentos/compus/${id}`, {
+         method: 'PUT',
+         body: formData,
+       });
+ 
+       if (!response.ok) {
+         throw new Error('Error al subir el archivo');
+       }
+       alert('Subido el archivo')
+       const data = await response.json();
+       console.log('Respuesta del servidor:', data);
+     } catch (error) {
+       console.error('Error al subir el archivo:', error);
+     }
+   };*/
   const facturarData = {
     sedes: 'torre A',
     pisos: 'Segundo piso',
@@ -162,7 +164,7 @@ export default function datable() {
   const [selectedRows, setSelectedRows] = useState([]);
 
 
-  useEffect(() => {
+ /* useEffect(() => {
     const obtenerImagenes = async () => {
       try {
         const nuevasImagenes = [];
@@ -191,7 +193,45 @@ export default function datable() {
     };
 
     obtenerImagenes();
-  }, [computadoress]);
+  }, [computadoress]);*/
+
+
+  const [imagenURLsSu, setImagenURLsSu] = useState([]);
+  const [imagenFaltasSu, setImagenFaltasSu] = useState([]);
+  const [imagenesDb, setImagenes] = useState([]);
+
+  console.log(imagenesDb)
+
+  useEffect(() => {
+    const obtenerImagenesDB = async () => {
+      try {
+        const nuevasImagenes = [];
+        const nuevasFaltas = [];
+
+        for (const imagen of imagenesDb) {
+          const id = imagen._id;
+          const response = await fetch(`http://localhost:8000/api/documentos/hospital/ArchivosSubidos/${id}`);
+
+          if (response.ok) {
+            const imagenBlob = await response.blob();
+            const url = URL.createObjectURL(imagenBlob);
+            nuevasImagenes.push(url);
+            nuevasFaltas.push(false);
+          } else {
+            nuevasImagenes.push(null);
+            nuevasFaltas.push(true);
+          }
+        }
+
+        setImagenURLsSu(nuevasImagenes);
+        setImagenFaltasSu(nuevasFaltas);
+      } catch (error) {
+        console.error('Error al obtener las imágenes:', error);
+      }
+    };
+
+    obtenerImagenesDB();
+  }, [imagenesDb]);
 
   /* useEffect(() => {
      const obtenerImagenes = async () => {
@@ -280,6 +320,32 @@ export default function datable() {
 
     fetchCompu();
   }, []);
+  useEffect(() => {
+    const fetchImagenes = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/documentos/listarImg', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+
+        // Ensure data has the expected structure and property
+        if (data && data.ListarImagenes) {
+          setImagenes(data.ListarImagenes);
+        } else {
+          console.error('la api no responde.');
+          // Handle the case where the API data is missing or has an unexpected structure
+        }
+      } catch (error) {
+        console.error('Error fetching impresoras:', error);
+      }
+    };
+
+    fetchImagenes();
+  }, []);
 
   /*
     useEffect(() => {
@@ -321,40 +387,40 @@ export default function datable() {
       fetchArchivoss();
     }, []);*/
 
-    const handleFileChangeIMG = (event) => {
-      setArchivo(event.target.files[0]); // Capturar el archivo seleccionado por el usuario
-    };
-  
-    const handleSubmit = async (event,id) => {
-      event.preventDefault();
-  
-      if (!archivo) {
-        console.error('No hay archivo para subir');
-        return;
+  const handleFileChangeIMG = (event) => {
+    setArchivo(event.target.files[0]); // Capturar el archivo seleccionado por el usuario
+  };
+
+  const handleSubmit = async (event, id) => {
+    event.preventDefault();
+
+    if (!archivo) {
+      console.error('No hay archivo para subir');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('archivo', archivo); // Agregar el archivo al FormData
+
+      // Enviar el FormData al servidor
+      const response = await fetch(`http://localhost:8000/api/documentos/compus/${id}`, {
+        method: 'PUT',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al subir el archivo');
       }
-  
-      try {
-        const formData = new FormData();
-        formData.append('archivo', archivo); // Agregar el archivo al FormData
-  
-        // Enviar el FormData al servidor
-        const response = await fetch(`http://localhost:8000/api/documentos/compus/${id}`, {
-          method: 'PUT',
-          body: formData,
-        });
-  
-        if (!response.ok) {
-          throw new Error('Error al subir el archivo');
-        }
-  
-        const data = await response.json();
-        console.log('Respuesta del servidor:', data);
-        // Realizar acciones adicionales si es necesario
-      } catch (error) {
-        console.error('Error al subir el archivo:', error);
-      }
-    };
-  
+
+      const data = await response.json();
+      console.log('Respuesta del servidor:', data);
+      // Realizar acciones adicionales si es necesario
+    } catch (error) {
+      console.error('Error al subir el archivo:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchImpresoras = async () => {
       try {
@@ -508,9 +574,9 @@ export default function datable() {
           </tr>
         </thead>
         <tbody>
-          {imagenURLs.map((url, index) => (
+          {imagenURLsSu.map((url, index) => (
             <tr key={index}>
-              {imagenFaltas[index] ? (
+              {imagenFaltasSu[index] ? (
                 <td>La imagen no está disponible</td>
               ) : (
                 <td><img src={url} alt="Imagen" /></td>
@@ -528,12 +594,12 @@ export default function datable() {
         <button type="submit">Subir Archivo</button>
       </Form>
       <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="formFileLg" className="mb-3">
-        <Form.Label>Aquí se puede actualizar</Form.Label>
-        <Form.Control onChange={handleFileChangeIMG} type="file" size="lg" />
-      </Form.Group>
-      <Button onClick={(event) => handleSubmit(event, id)}>Subir Imagen</Button>
-    </Form>
+        <Form.Group controlId="formFileLg" className="mb-3">
+          <Form.Label>Aquí se puede actualizar</Form.Label>
+          <Form.Control onChange={handleFileChangeIMG} type="file" size="lg" />
+        </Form.Group>
+        <Button onClick={(event) => handleSubmit(event, id)}>Subir Imagen</Button>
+      </Form>
 
 
 

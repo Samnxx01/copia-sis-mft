@@ -14,4 +14,3 @@ export default function LayoutRoutes() {
   </React.Fragment>
   )
 }
-//no me esta leyendo privateRoute

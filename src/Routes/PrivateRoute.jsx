@@ -14,13 +14,6 @@ export default function PrivateRoute() {
     return <Navigate to="/login" />; // Redirect to login if not logged in
   }
 
-  // Check user role for authorized access
-  const esTecnico = user && user.rol === 'TECNICO'
-
-  // Verificar el rol del usuario antes de renderizar las rutas
-  const esCoordinador = user && user.rol === 'COORDINADOR';
-
-
   return (
     <Routes>
       {/* Use individual Route components */}

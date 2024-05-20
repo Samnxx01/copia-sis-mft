@@ -23,7 +23,7 @@ export default function Home() {
 
   const enviarComputadores = () => {
     navigate('/Computadores');
-  };
+  };  
   const enviarImpresoras = () => {
     navigate('/Impresoras');
   };
@@ -42,57 +42,57 @@ export default function Home() {
       <title>Home</title>
     </head>
     
-    <body style={{backgroundColor:'green', height:"897px"}} >
-      <h2 style={{textAlign:'center'}}><label>Departamento sistemas de clinica uros  a continuacion tienes que seleccionar el modulo de tu uso:</label></h2>
-      <div  style={{justifyContent: 'center', textAlign: 'center', display: 'flex', padding: "50px"}} > 
-        <Card  variant="top" style={{ width: '300px', justifyItems: 'center', display: 'block', textAlign: 'center', marginRight:"50px"}} >
-            <h1 className='bi bi-pc-display-horizontal' ></h1>
+      <body style={{backgroundColor:'green', height:"897px"}} >
+        <h2 style={{textAlign:'center'}}><label>Departamento sistemas de clinica uros  a continuacion tienes que seleccionar el modulo de tu uso:</label></h2>
+        <div  style={{justifyContent: 'center', textAlign: 'center', display: 'flex', padding: "50px"}} > 
+          <Card  variant="top" style={{ width: '300px', justifyItems: 'center', display: 'block', textAlign: 'center', marginRight:"50px"}} >
+              <h1 className='bi bi-pc-display-horizontal' ></h1>
+              <Card.Body>
+                <Card.Title style={{marginTop:'40px'}}>Modulo de computadores</Card.Title>
+              </Card.Body>
+              <Card.Body>
+                <Button style={{height:'70px', marginTop:'70px'}} onClick={enviarComputadores}>Ingrese al modulo</Button>
+              </Card.Body>
+            </Card>
+            <Card style={{ width: '300px', justifyItems: 'center', display: 'block', textAlign: 'center' }}>
+            
+              <h1 className="bi bi-printer"></h1>
+              <Card.Body>
+                <Card.Title  style={{marginTop:'40px'}}>Modulo de impresoras</Card.Title>
+              </Card.Body>
+              <Card.Body>
+                <Button style={{height:'70px', marginTop:'70px'}} onClick={enviarImpresoras}>Ingrese al modulo</Button>
+              </Card.Body>
+            </Card>
+            <Card style={{ width: '300px', justifyItems: 'center', display: 'block', textAlign: 'center', marginLeft:"50px" }}>
+              <h1 className='bi bi-file'></h1>
+              <Card.Body>
+                <Card.Title style={{marginTop:'40px'}}>Modulos Reportes</Card.Title>
+              </Card.Body>
+              <Card.Body>
+                <Button style={{height:'70px', marginTop:'70px'}} onClick={enviarReportes}>Ingrese al modulo</Button>
+              </Card.Body>
+            </Card>
+            <Card style={{ width: '300px', justifyItems: 'center', display: 'block', textAlign: 'center', marginLeft:"50px" }}>
+              <h1 className='bi bi-upc-scan'></h1>
             <Card.Body>
-              <Card.Title style={{marginTop:'40px'}}>Modulo de computadores</Card.Title>
+              <Card.Title style={{marginTop:'40px'}}>Modulos Escaner</Card.Title>
             </Card.Body>
             <Card.Body>
-              <Button style={{height:'70px', marginTop:'70px'}} onClick={enviarComputadores}>Ingrese al modulo</Button>
-            </Card.Body>
-          </Card>
-          <Card style={{ width: '300px', justifyItems: 'center', display: 'block', textAlign: 'center' }}>
-          
-            <h1 className="bi bi-printer"></h1>
-            <Card.Body>
-              <Card.Title  style={{marginTop:'40px'}}>Modulo de impresoras</Card.Title>
-            </Card.Body>
-            <Card.Body>
-              <Button style={{height:'70px', marginTop:'70px'}} onClick={enviarImpresoras}>Ingrese al modulo</Button>
+              <Button style={{height:'70px', marginTop:'70px'}}>Ingrese al modulo</Button>
             </Card.Body>
           </Card>
           <Card style={{ width: '300px', justifyItems: 'center', display: 'block', textAlign: 'center', marginLeft:"50px" }}>
-            <h1 className='bi bi-file'></h1>
+              <h1 className='bi bi-upc-scan'></h1>
             <Card.Body>
-              <Card.Title style={{marginTop:'40px'}}>Modulos Reportes</Card.Title>
+              <Card.Title style={{marginTop:'40px'}}>Modulos Registro Tecnicos</Card.Title>
             </Card.Body>
             <Card.Body>
-              <Button style={{height:'70px', marginTop:'70px'}} onClick={enviarReportes}>Ingrese al modulo</Button>
+              <Button style={{height:'70px', marginTop:'70px'}}>Ingrese al modulo</Button>
             </Card.Body>
           </Card>
-          <Card style={{ width: '300px', justifyItems: 'center', display: 'block', textAlign: 'center', marginLeft:"50px" }}>
-            <h1 className='bi bi-upc-scan'></h1>
-           <Card.Body>
-             <Card.Title style={{marginTop:'40px'}}>Modulos Escaner</Card.Title>
-           </Card.Body>
-           <Card.Body>
-             <Button style={{height:'70px', marginTop:'70px'}}>Ingrese al modulo</Button>
-           </Card.Body>
-         </Card>
-         <Card style={{ width: '300px', justifyItems: 'center', display: 'block', textAlign: 'center', marginLeft:"50px" }}>
-            <h1 className='bi bi-upc-scan'></h1>
-           <Card.Body>
-             <Card.Title style={{marginTop:'40px'}}>Modulos Registro Tecnicos</Card.Title>
-           </Card.Body>
-           <Card.Body>
-             <Button style={{height:'70px', marginTop:'70px'}}>Ingrese al modulo</Button>
-           </Card.Body>
-         </Card>
-        </div>
-    </body>
+          </div>
+      </body>
     </html>
     </>
   )

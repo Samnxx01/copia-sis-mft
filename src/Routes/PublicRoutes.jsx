@@ -14,4 +14,3 @@ export default function PublicRoutes() {
         </Routes>
     )
 }
-//listo en la parte de impresoras yo envio el id iud asi tengo que enviarlo?
