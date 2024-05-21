@@ -34,7 +34,8 @@ export default function Reportescompu() {
     serial_garantia: '',
     diagnostico: '',
     activos_fijos: '',
-    coordinador_area: ''
+    coordinador_area: '',
+    img: ''
   });
 
 
@@ -53,22 +54,33 @@ export default function Reportescompu() {
       [name]: value
     });
   };
+  const [archivo, setArchivo] = useState(null);
+
+  const handleFileChange = (e) => {
+    setArchivo(e.target.files[0]);
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!archivo) {
+      console.error('No hay archivo para subir');
+      return;
+    }
+
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
+    }
+    formDataToSend.append('archivo', archivo);
+
     try {
       const response = await fetch('http://localhost:8000/api/inventario/guardarReportes', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'codificado': ''
-        },
-        body: JSON.stringify({
-          ...formData,
-        })
+        body: formDataToSend,
       });
-      console.log(formData)
+      console.log(formDataToSend)
 
       if (response.ok) {
         alert('¡Registro exitoso!');
@@ -574,7 +586,7 @@ export default function Reportescompu() {
                 </Row>
                 <Form.Group controlId="formFileLg" className="mb-3">
                 <Form.Label>Subir el archivo</Form.Label>
-                <Form.Control type="file" size="lg" />
+                <Form.Control type="file" onChange={handleFileChange} />
               </Form.Group>
                 <Row className="mb-3">
 
