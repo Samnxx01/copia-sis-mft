@@ -10,7 +10,8 @@ import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { jsPDF } from 'jspdf'
-import 'jspdf-autotable';  
+import 'jspdf-autotable'; 
+import imgs from '../../../public/img/clinicauros.jpg' 
 
 
 
@@ -366,11 +367,11 @@ export default function Impresoras() {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>Impresoras</title>
         </head>
-        <body>
+        <body style={{backgroundImage:`url(${imgs})`, backgroundSize:'cover', margin:'0', padding:'0' }}>
           <Narvbar />
-          <Button style={{ marginRight: '20px' }} variant="dark" onClick={enviarMenu}>Menu principal</Button>
-          <Button variant="success"  style={{ marginRight: '20px' }} onClick={generatePDF}>Generar PDF </Button>
-          <Button style={{ marginRight: '20px' }} variant="success" onClick={handleShowID}>
+          <Button style={{  marginTop:'10px', marginRight: '20px' }} variant="dark" onClick={enviarMenu}>Menu principal</Button>
+          <Button variant="success"  style={{  marginTop:'10px', marginRight: '20px' }} onClick={generatePDF}>Generar PDF </Button>
+          <Button style={{ marginTop:'10px', marginRight: '20px' }} variant="success" onClick={handleShowID}>
             Listar por SERIAL
           </Button>
 
@@ -394,7 +395,7 @@ export default function Impresoras() {
             <Modal.Footer>
             </Modal.Footer>
           </Modal>
-          <Button variant="primary" onClick={handleShow}>
+          <Button style={{ marginTop:'10px'}} variant="primary" onClick={handleShow}>
             Aqui se registra la impresora
           </Button>
 
@@ -615,7 +616,7 @@ export default function Impresoras() {
             </Modal>
 
           </Table>
-          <div style={{ height: 400, width: '100%' }}>
+          <div style={{ height: 900 , width: '100%' }}>
           <DataGrid
             rows={rows}
             columns={columns}

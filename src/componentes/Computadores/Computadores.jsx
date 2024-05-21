@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { jsPDF } from 'jspdf'
 import 'jspdf-autotable';
+import imgs from '../../../public/img/clinicauros.jpg'
 
 
 
@@ -426,19 +427,52 @@ const handleSubmit = async (e) => {
     //crear tablas 
 
 
-
     doc.autoTable({
-      head: [['Fecha','Sedes', 'Ubicacion','Area','Marca','Nombre_equipo','Sistema Operativo','Plca','Disco Duro', 'Memoria Ram','IP', 'Serial', 'Ubicacion', 'MAC', 'Marca', 'Usuario', 'Clave', 'Nombre_asignado', 'Cedula']],
-      body: rows.map(computadores => [computadores.fecha,computadores.sede, computadores.ubicacion, computadores.area,computadores.marca, computadores.nombre_equipo, computadores.sistema_operativo,computadores.placa,computadores.disco_duro,computadores.memoria_ram, computadores.ip, computadores.serial, computadores.mac,computadores.ip,computadores.usuario,computadores.clave, computadores.nombre_asignado, computadores.cedula, computadores.dominio, computadores.fecha_mantenimiento, computadores.tecnico,computadores.observaciones,computadores.img]),
+      head: [['Fecha','Sedes', 'Ubicacion','Area','Marca','Nombre_equipo','Sistema Operativo','Plca','Disco Duro', 'Memoria Ram','IP', 'Serial', 'MAC', 'Usuario', 'Clave', 'Nombre_asignado', 'Cedula', 'Dominio', 'Fecha Mantenimiento', 'Técnico', 'Observaciones', 'Imagen']],
+      body: rows.map(computador => [
+        computador.fecha,
+        computador.sede,
+        computador.ubicacion,
+        computador.area,
+        computador.marca,
+        computador.nombre_equipo,
+        computador.sistema_operativo,
+        computador.placa,
+        computador.disco_duro,
+        computador.memoria_ram,
+        computador.ip,
+        computador.serial,
+        computador.mac,
+        computador.usuario,
+        computador.clave,
+        computador.nombre_asignado,
+        computador.cedula,
+        computador.dominio,
+        computador.fecha_mantenimiento,
+        computador.tecnico,
+        computador.observaciones,
+        computador.img
+      ]),
       styles: {
         tableWidth: 'wrap',
-        tableHeight: 'auto'
-
+        tableHeight: 'auto',
+        fontSize: 5, // Tamaño de fuente
+        cellPadding: 2, // Espaciado interno de las celdas
+        cellWidth: 9, // Ajuste automático del ancho de la celda
+        valign: 'middle', // Alineación vertical del texto
+        halign: 'center', // Alineación horizontal del texto
+        overflow: 'linebreak', // Manejo de saltos de línea
+        lineWidth: 0.1, // Ancho del borde de la tabla
+        lineColor: [0, 0, 0], // Color del borde de la tabla
+        fontStyle: 'normal', // Estilo de fuente
+        textColor: [0, 0, 0], // Color del texto
+        fillColor: [255, 255, 255], // Color de fondo de la celda
+        rowPageBreak: 'auto', // Control de salto de página por fila
+        columnWidth: 'auto' // Ancho automático de columna
       }
     });
-
     //guardar el pdf un nombre especifico 
-    doc.save(`Tabla de impresoras.pdf`)
+    doc.save(`Tabla de computador.pdf`)
 
   }
 
@@ -451,14 +485,14 @@ const handleSubmit = async (e) => {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>Computadores</title>
         </head>
-        <body>
+        <body style={{backgroundImage:`url(${imgs})`, backgroundSize:'cover', margin:'0', padding:'0' }}>
           <Narvbar />
-          <Button style={{ marginRight: '20px' }} variant="dark" onClick={enviarMenu}>Menu principal</Button>
-          <Button variant="success"  style={{ marginRight: '20px' }} onClick={generatePDF}>Generar PDF </Button>
-          <Button style={{ marginRight: '20px' }} variant="primary" onClick={handleShow}>
+          <Button style={{ marginTop:'10px', marginRight: '20px' }} variant="dark" onClick={enviarMenu}>Menu principal</Button>
+          <Button variant="success"  style={{ marginTop:'10px', marginRight: '20px' }} onClick={generatePDF}>Generar PDF </Button>
+          <Button style={{ marginTop:'10px', marginRight: '20px' }} variant="primary" onClick={handleShow}>
             Aqui agregas el computador
           </Button>
-          <Button variant="success" onClick={handleShowID}>
+          <Button style={{marginTop:'10px',}} variant="success" onClick={handleShowID}>
             Listar por SERIAL
           </Button>
 

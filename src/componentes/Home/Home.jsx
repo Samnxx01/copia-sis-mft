@@ -6,6 +6,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import './Homes.css'; // Relative path
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
+import imgs from '../../../public/img/clinicauros.jpg'
 
 
 //import Reportes from'../Reportes-tecnicos/Reportes-compu'
@@ -42,8 +43,8 @@ export default function Home() {
       <title>Home</title>
     </head>
     
-      <body style={{backgroundColor:'green', height:"897px"}} >
-        <h2 style={{textAlign:'center'}}><label>Departamento sistemas de clinica uros  a continuacion tienes que seleccionar el modulo de tu uso:</label></h2>
+      <body style={{backgroundImage:`url(${imgs})`, backgroundSize:'cover', height:"897px"}} >
+        <h2 style={{textAlign:'center', color:'green'}}><label>Departamento sistemas de clinica uros  a continuacion tienes que seleccionar el modulo de tu uso:</label></h2>
         <div  style={{justifyContent: 'center', textAlign: 'center', display: 'flex', padding: "50px"}} > 
           <Card  variant="top" style={{ width: '300px', justifyItems: 'center', display: 'block', textAlign: 'center', marginRight:"50px"}} >
               <h1 className='bi bi-pc-display-horizontal' ></h1>
