@@ -428,7 +428,8 @@ const handleSubmit = async (e) => {
 
 
     doc.autoTable({
-      head: [['Fecha','Sedes', 'Ubicacion','Area','Marca','Nombre_equipo','Sistema Operativo','Plca','Disco Duro', 'Memoria Ram','IP', 'Serial', 'MAC', 'Usuario', 'Clave', 'Nombre_asignado', 'Cedula', 'Dominio', 'Fecha Mantenimiento', 'Técnico', 'Observaciones', 'Imagen']],
+
+      head: [['Fecha','Sedes', 'Ubicacion','Area','Marca','Nombre_equipo','Sistema Operativo','Placa','Disco Duro', 'Memoria Ram','IP', 'Serial', 'MAC', 'Usuario', 'Clave', 'Nombre_asignado', 'Cedula', 'Dominio', 'Fecha Mantenimiento', 'Técnico', 'Observaciones', 'Imagen']],
       body: rows.map(computador => [
         computador.fecha,
         computador.sede,
@@ -774,7 +775,7 @@ const handleSubmit = async (e) => {
                 },
               }}
               pageSizeOptions={[5, 10, 15, 20, 25, 30, 35, 40, 45, 50]}
-              checkboxSelection
+      
             />
           </div>
           <Modal show={showModi} onHide={handleCloseModi}>

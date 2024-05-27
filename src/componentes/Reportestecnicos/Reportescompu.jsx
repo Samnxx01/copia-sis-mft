@@ -4,8 +4,12 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import Modal from 'react-bootstrap/Modal';
 import Container from 'react-bootstrap/Container';
 import '../Reportestecnicos/reportes.css'
+import { useNavigate } from 'react-router-dom';
+
+
 
 export default function Reportescompu() {
 
@@ -38,7 +42,7 @@ export default function Reportescompu() {
     img: ''
   });
 
-
+  const navigate = useNavigate();
   const [usuarios, setUsuarios] = useState([]);
   const [computadoress, setComputadoresss] = useState([]);
   const [bajas, setBajas] = useState([]);
@@ -121,32 +125,14 @@ export default function Reportescompu() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchImpresoras = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/api/inventario/listarimpresoras', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+  const enviarMenu = () => {
+    navigate('/Home');
+  };
+  const enviarListar = () => {
+    navigate('/listarReportes');
+  };
 
-        const data = await response.json();
 
-        // Ensure data has the expected structure and property
-        if (data && data.registrosImpreso) {
-          setImpresorass(data.registrosImpreso);
-        } else {
-          console.error('la api no responde.');
-          // Handle the case where the API data is missing or has an unexpected structure
-        }
-      } catch (error) {
-        console.error('Error fetching impresoras:', error);
-      }
-    };
-
-    fetchImpresoras();
-  }, [])
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -210,7 +196,10 @@ export default function Reportescompu() {
 
     fetchOptions();
   }, []);
+  const [showFil, setShowFil] = useState(false);
 
+  const handleCloseFil = () => setShowFil(false);
+  const handleShowFil = () => setShowFil(true);
 
   return (
     <>
@@ -222,9 +211,14 @@ export default function Reportescompu() {
         </head>
         <body>
           <Narvbar />
+          <Button style={{ marginRight: '50px', marginTop: '10px' }} variant="dark" onClick={enviarMenu}>Menu principal</Button>
+          <Button style={{ marginRight: '50px', marginTop: '10px' }} variant="primary" onClick={enviarListar}>
+           Buscar reporte
+          </Button>
+
           <Container className="d-flex justify-content-center align-items-center" style={{ justifyContent: 'center' }}>
-            <Row style={{display:'flex', justifyContent:'center'}}>
-              <Form style={{marginTop:'50px'}} className="reporte-formu" >
+            <Row style={{ display: 'flex', justifyContent: 'center' }}>
+              <Form style={{ marginTop: '50px' }} className="reporte-formu" >
                 <Row className="mb-3">
                   <Form.Group as={Col} >
                     <Form.Label><th>Fecha</th></Form.Label>
@@ -585,9 +579,9 @@ export default function Reportescompu() {
                   </Form.Group>
                 </Row>
                 <Form.Group controlId="formFileLg" className="mb-3">
-                <Form.Label>Subir el archivo</Form.Label>
-                <Form.Control type="file" onChange={handleFileChange} />
-              </Form.Group>
+                  <Form.Label>Subir el archivo</Form.Label>
+                  <Form.Control type="file" onChange={handleFileChange} />
+                </Form.Group>
                 <Row className="mb-3">
 
                   <Form.Group as={Col} >

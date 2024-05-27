@@ -164,7 +164,7 @@ export default function datable() {
   const [selectedRows, setSelectedRows] = useState([]);
 
 
- /* useEffect(() => {
+ useEffect(() => {
     const obtenerImagenes = async () => {
       try {
         const nuevasImagenes = [];
@@ -193,7 +193,7 @@ export default function datable() {
     };
 
     obtenerImagenes();
-  }, [computadoress]);*/
+  }, [computadoress]);
 
 
   const [imagenURLsSu, setImagenURLsSu] = useState([]);
@@ -202,7 +202,7 @@ export default function datable() {
 
   console.log(imagenesDb)
 
-  useEffect(() => {
+ /* useEffect(() => {
     const obtenerImagenesDB = async () => {
       try {
         const nuevasImagenes = [];
@@ -210,7 +210,7 @@ export default function datable() {
 
         for (const imagen of imagenesDb) {
           const id = imagen._id;
-          const response = await fetch(`http://localhost:8000/api/documentos/hospital/ArchivosSubidos/${id}`);
+          const response = await fetch(`http://localhost:8000/api/documentos/img/ArchivosSubidos/${id}`);
 
           if (response.ok) {
             const imagenBlob = await response.blob();
@@ -231,7 +231,7 @@ export default function datable() {
     };
 
     obtenerImagenesDB();
-  }, [imagenesDb]);
+  }, [imagenesDb]);*/
 
   /* useEffect(() => {
      const obtenerImagenes = async () => {
@@ -317,10 +317,11 @@ export default function datable() {
         console.error('Error fetching impresoras:', error);
       }
     };
+    console.log()
 
     fetchCompu();
   }, []);
-  useEffect(() => {
+ /* useEffect(() => {
     const fetchImagenes = async () => {
       try {
         const response = await fetch('http://localhost:8000/api/documentos/listarImg', {
@@ -345,7 +346,7 @@ export default function datable() {
     };
 
     fetchImagenes();
-  }, []);
+  }, []);*/
 
   /*
     useEffect(() => {
@@ -421,7 +422,7 @@ export default function datable() {
     }
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchImpresoras = async () => {
       try {
         const response = await fetch('http://localhost:8000/api/inventario/listarimpresoras', {
@@ -446,7 +447,7 @@ export default function datable() {
     };
 
     fetchImpresoras();
-  }, []);
+  }, []);*/
   //Logica para modificar impresora
   const handleSubmitModificar = async (e, id) => {
     e.preventDefault();
@@ -574,9 +575,9 @@ export default function datable() {
           </tr>
         </thead>
         <tbody>
-          {imagenURLsSu.map((url, index) => (
+          {imagenURLs.map((url, index) => (
             <tr key={index}>
-              {imagenFaltasSu[index] ? (
+              {imagenFaltas[index] ? (
                 <td>La imagen no está disponible</td>
               ) : (
                 <td><img src={url} alt="Imagen" /></td>
